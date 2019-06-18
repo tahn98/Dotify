@@ -22,7 +22,7 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">#ffffff</item>
         <item name="android:textSize">25sp</item>
-        <item name="fontFamily">@font/avenirnext</item>
+        <item name="fontFamily">@font/avenir</item>
     </style>
 
 </resources>
