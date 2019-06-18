@@ -1,256 +1,268 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
     <data>
-        <import type="android.view.View"/>
+
+        <import type="android.view.View" />
+
         <variable
-                name="email"
-                type="androidx.databinding.ObservableField&lt;String&gt;"/>
+            name="email"
+            type="androidx.databinding.ObservableField&lt;String&gt;" />
+
         <variable
-                name="username"
-                type="androidx.databinding.ObservableField&lt;String&gt;"/>
+            name="username"
+            type="androidx.databinding.ObservableField&lt;String&gt;" />
+
         <variable
-                name="password"
-                type="androidx.databinding.ObservableField&lt;String&gt;"/>
+            name="password"
+            type="androidx.databinding.ObservableField&lt;String&gt;" />
+
         <variable
-                name="date"
-                type="androidx.databinding.ObservableField&lt;String&gt;"/>
+            name="date"
+            type="androidx.databinding.ObservableField&lt;String&gt;" />
+
         <variable
-                name="gender"
-                type="androidx.databinding.ObservableField&lt;String&gt;"/>
+            name="gender"
+            type="androidx.databinding.ObservableField&lt;String&gt;" />
+
         <variable
-                name="check"
-                type="androidx.databinding.ObservableField&lt;Boolean&gt;"/>
+            name="check"
+            type="androidx.databinding.ObservableField&lt;Boolean&gt;" />
+
         <variable
-                name="presenter"
-                type="com.vinova.dotify.view.SignUp"/>
+            name="presenter"
+            type="com.vinova.dotify.view.SignUp" />
     </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent">
+
+        <Button
+            android:id="@+id/fb_signup"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/transparent">
+            android:layout_height="wrap_content"
+            android:background="#3b5998"
+            android:drawableStart="@drawable/fb_ic"
+            android:drawableLeft="@drawable/fb_ic"
+            android:fontFamily="@font/avenirnext"
+            android:onClick="@{"
+            android:paddingVertical="15dp"
+            android:paddingLeft="25dp"
+            android:text="Sign up with Facebook"
+            android:textAllCaps="false"
+            android:textColor="#ffffff"
+            android:textSize="19sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_or"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:fontFamily="@font/avenirnext"
+            android:text="or with email"
+            android:textSize="20sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/fb_signup" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/email_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:background="#F7F7F7"
+            android:paddingVertical="5dp"
+            android:paddingLeft="10dp"
+            android:textColor="#000000"
+            android:theme="@style/TextLabel"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_or">
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/email_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:drawableStart="@drawable/email_ic"
+                android:drawableLeft="@drawable/email_ic"
+                android:drawablePadding="20dp"
+                android:fontFamily="@font/avenirnext"
+                android:hint="Email"
+                android:imeOptions="actionNext"
+                android:inputType="textEmailAddress|textNoSuggestions"
+                android:paddingVertical="13dp"
+                android:text="@={email}"
+                android:textColor="#000000"
+                android:textCursorDrawable="@null"
+                app:backgroundTint="@android:color/transparent" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/username_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="4dp"
+            android:background="#F7F7F7"
+            android:paddingVertical="5dp"
+            android:paddingLeft="10dp"
+            android:textColor="#000000"
+            android:theme="@style/TextLabel"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/email_container">
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/user_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:drawableStart="@drawable/user_ic"
+                android:drawableLeft="@drawable/user_ic"
+                android:drawablePadding="20dp"
+                android:fontFamily="@font/avenirnext"
+                android:hint="Choose username"
+                android:imeOptions="actionNext"
+                android:inputType="textNoSuggestions"
+                android:paddingVertical="13dp"
+                android:text="@={username}"
+                android:textColor="#000000"
+                android:textCursorDrawable="@null"
+                app:backgroundTint="@android:color/transparent" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/pass_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="4dp"
+            android:background="#F7F7F7"
+            android:paddingVertical="5dp"
+            android:paddingLeft="10dp"
+            android:textColor="#000000"
+            android:theme="@style/TextLabel"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/username_container">
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/pass_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:drawableStart="@drawable/password_ic"
+                android:drawableLeft="@drawable/password_ic"
+                android:drawablePadding="20dp"
+                android:fontFamily="@font/avenirnext"
+                android:hint="Choose password"
+                android:imeOptions="actionNext"
+                android:inputType="textPassword|textNoSuggestions"
+                android:paddingVertical="13dp"
+                android:text="@={password}"
+                android:textColor="#000000"
+                android:textCursorDrawable="@null"
+                app:backgroundTint="@android:color/transparent" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/birthdate_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="4dp"
+            android:background="#F7F7F7"
+            android:paddingVertical="5dp"
+            android:paddingLeft="10dp"
+            android:textColor="#000000"
+            android:theme="@style/TextLabel"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/pass_container">
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/birthdate_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:drawableStart="@drawable/calendar_ic"
+                android:drawableLeft="@drawable/calendar_ic"
+                android:drawablePadding="20dp"
+                android:fontFamily="@font/avenirnext"
+                android:hint="Date of birth"
+                android:imeOptions="actionNext"
+                android:inputType="textEmailAddress|textNoSuggestions"
+                android:paddingVertical="13dp"
+                android:text="@={date}"
+                android:textColor="#000000"
+                android:textCursorDrawable="@null"
+                app:backgroundTint="@android:color/transparent" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/gender_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="4dp"
+            android:background="#F7F7F7"
+            android:paddingVertical="5dp"
+            android:paddingLeft="10dp"
+            android:textColor="#000000"
+            android:theme="@style/TextLabel"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/birthdate_container">
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/gender_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:drawableStart="@drawable/user_ic"
+                android:drawableLeft="@drawable/user_ic"
+                android:drawablePadding="20dp"
+                android:fontFamily="@font/avenirnext"
+                android:hint="Gender"
+                android:imeOptions="actionNext"
+                android:inputType="textEmailAddress|textNoSuggestions"
+                android:paddingVertical="13dp"
+                android:text="@={gender}"
+                android:textColor="#000000"
+                android:textCursorDrawable="@null"
+                app:backgroundTint="@android:color/transparent" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/fb_signup"
-                android:background="#3b5998"
-                android:textAllCaps="false"
-                android:text="Sign up with Facebook"
-                android:textColor="#ffffff"
-                android:textSize="19sp"
-                android:paddingLeft="25dp"
-                android:paddingVertical="15dp"
-                android:textStyle="bold"
-                android:onClick="@{"
-                android:fontFamily="@font/avenirnext"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                android:drawableStart="@drawable/fb_ic"
-                android:drawableLeft="@drawable/fb_ic"
-        />
-        <TextView android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:id="@+id/tv_or"
-                  app:layout_constraintLeft_toLeftOf="parent"
-                  app:layout_constraintRight_toRightOf="parent"
-                  app:layout_constraintTop_toBottomOf="@id/fb_signup"
-                  android:layout_marginTop="18dp"
-                  android:fontFamily="@font/avenirnext"
-                  android:textSize="20sp"
-                  android:text="or with email"
-        />
-        <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/email_container"
-                app:layout_constraintTop_toBottomOf="@id/tv_or"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                android:layout_marginTop="20dp"
-                android:layout_gravity="center"
-                android:textColor="#000000"
-                android:theme="@style/TextLabel"
-                android:background="#F7F7F7"
-                android:paddingVertical="5dp"
-                android:paddingLeft="10dp">
-
-            <androidx.appcompat.widget.AppCompatEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/email_field"
-                    android:imeOptions="actionNext"
-                    android:inputType="textEmailAddress|textNoSuggestions"
-                    android:drawableLeft="@drawable/email_ic"
-                    android:drawableStart="@drawable/email_ic"
-                    android:textColor="#000000"
-                    android:paddingVertical="13dp"
-                    android:drawablePadding="20dp"
-                    android:fontFamily="@font/avenirnext"
-                    android:hint="Email"
-                    android:text="@={email}"
-                    android:textCursorDrawable="@null"
-                    android:background="@null"
-                    app:backgroundTint="@android:color/transparent"/>
-
-        </com.google.android.material.textfield.TextInputLayout>
-        <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/username_container"
-                app:layout_constraintTop_toBottomOf="@id/email_container"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                android:layout_marginTop="4dp"
-                android:layout_gravity="center"
-                android:textColor="#000000"
-                android:theme="@style/TextLabel"
-                android:background="#F7F7F7"
-                android:paddingVertical="5dp"
-                android:paddingLeft="10dp">
-
-            <androidx.appcompat.widget.AppCompatEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/user_field"
-                    android:imeOptions="actionNext"
-                    android:inputType="textNoSuggestions"
-                    android:drawableLeft="@drawable/user_ic"
-                    android:drawableStart="@drawable/user_ic"
-                    android:textColor="#000000"
-                    android:drawablePadding="20dp"
-                    android:paddingVertical="13dp"
-                    android:fontFamily="@font/avenirnext"
-                    android:hint="Choose username"
-                    android:text="@={username}"
-                    android:textCursorDrawable="@null"
-                    android:background="@null"
-                    app:backgroundTint="@android:color/transparent"/>
-
-        </com.google.android.material.textfield.TextInputLayout>
-        <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/pass_container"
-                app:layout_constraintTop_toBottomOf="@id/username_container"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                android:layout_marginTop="4dp"
-                android:layout_gravity="center"
-                android:textColor="#000000"
-                android:background="#F7F7F7"
-                android:theme="@style/TextLabel"
-                android:paddingVertical="5dp"
-                android:paddingLeft="10dp">
-
-            <androidx.appcompat.widget.AppCompatEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/pass_field"
-                    android:imeOptions="actionNext"
-                    android:inputType="textPassword|textNoSuggestions"
-                    android:drawableLeft="@drawable/password_ic"
-                    android:drawableStart="@drawable/password_ic"
-                    android:textColor="#000000"
-                    android:drawablePadding="20dp"
-                    android:paddingVertical="13dp"
-                    android:fontFamily="@font/avenirnext"
-                    android:hint="Choose password"
-                    android:text="@={password}"
-                    android:textCursorDrawable="@null"
-                    android:background="@null"
-                    app:backgroundTint="@android:color/transparent"/>
-
-        </com.google.android.material.textfield.TextInputLayout>
-        <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/birthdate_container"
-                app:layout_constraintTop_toBottomOf="@id/pass_container"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                android:layout_marginTop="4dp"
-                android:layout_gravity="center"
-                android:textColor="#000000"
-                android:background="#F7F7F7"
-                android:theme="@style/TextLabel"
-                android:paddingVertical="5dp"
-                android:paddingLeft="10dp">
-
-            <androidx.appcompat.widget.AppCompatEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/birthdate_field"
-                    android:imeOptions="actionNext"
-                    android:inputType="textEmailAddress|textNoSuggestions"
-                    android:drawableLeft="@drawable/calendar_ic"
-                    android:drawableStart="@drawable/calendar_ic"
-                    android:textColor="#000000"
-                    android:drawablePadding="20dp"
-                    android:paddingVertical="13dp"
-                    android:fontFamily="@font/avenirnext"
-                    android:hint="Date of birth"
-                    android:text="@={date}"
-                    android:textCursorDrawable="@null"
-                    android:background="@null"
-                    app:backgroundTint="@android:color/transparent"/>
-
-        </com.google.android.material.textfield.TextInputLayout>
-        <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/gender_container"
-                app:layout_constraintTop_toBottomOf="@id/birthdate_container"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                android:layout_marginTop="4dp"
-                android:layout_gravity="center"
-                android:textColor="#000000"
-                android:background="#F7F7F7"
-                android:theme="@style/TextLabel"
-                android:paddingVertical="5dp"
-                android:paddingLeft="10dp">
-
-            <androidx.appcompat.widget.AppCompatEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/gender_field"
-                    android:imeOptions="actionNext"
-                    android:inputType="textEmailAddress|textNoSuggestions"
-                    android:drawableLeft="@drawable/user_ic"
-                    android:drawableStart="@drawable/user_ic"
-                    android:textColor="#000000"
-                    android:drawablePadding="20dp"
-                    android:paddingVertical="13dp"
-                    android:background="@null"
-                    android:fontFamily="@font/avenirnext"
-                    android:hint="Gender"
-                    android:text="@={gender}"
-                    android:textCursorDrawable="@null"
-                    app:backgroundTint="@android:color/transparent"/>
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/signup"
-                android:background="@drawable/disable_button"
-                android:textAllCaps="false"
-                android:text="SIGN UP"
-                android:textColor="#ffffff"
-                android:textSize="25sp"
-                android:paddingVertical="15dp"
-                android:textStyle="bold"
-                android:fontFamily="@font/avenirnext"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                android:enabled="@{check.get()}"
-        />
-
-
+            android:id="@+id/signup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/disable_button"
+            android:enabled="@{check.get()}"
+            android:fontFamily="@font/avenirnext"
+            android:paddingVertical="15dp"
+            android:text="SIGN UP"
+            android:textAllCaps="false"
+            android:textColor="#ffffff"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
