@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "814524186798",
+    "firebase_url": "https://dotify-af4d2.firebaseio.com",
+    "project_id": "dotify-af4d2",
+    "storage_bucket": "dotify-af4d2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:814524186798:android:a24fb5d6082ef10a",
+        "android_client_info": {
+          "package_name": "com.vinova.dotify"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "814524186798-r4kl2s10qordh66m8ij4nrjlc3dndr79.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vinova.dotify",
+            "certificate_hash": "d7f644bc9f36c7d5bf7c52bdeaa49d712c44e582"
+          }
+        },
+        {
+          "client_id": "814524186798-7532ai0913v4k276giba9i1kkub7jd08.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAuPB6lSzOicyyYRgI2uStHc13wx_geqRg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "814524186798-7532ai0913v4k276giba9i1kkub7jd08.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
