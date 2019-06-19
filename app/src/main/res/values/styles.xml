@@ -24,5 +24,10 @@
         <item name="android:textSize">25sp</item>
         <item name="fontFamily">@font/avenir</item>
     </style>
+    <style name="datepicker" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorPrimary">#ffffff</item>
+        <item name="colorPrimaryDark">#E55F2C</item>
+        <item name="colorAccent">#E55F2C</item>
+    </style>
 
 </resources>

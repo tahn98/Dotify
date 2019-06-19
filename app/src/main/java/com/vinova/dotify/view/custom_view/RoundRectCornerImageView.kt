@@ -1,4 +1,4 @@
-package com.vinova.dotify.view.utils
+package com.vinova.dotify.view.custom_view
 
 import android.content.Context
 import android.graphics.Canvas

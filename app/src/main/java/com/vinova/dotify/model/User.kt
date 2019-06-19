@@ -1,11 +1,12 @@
 package com.vinova.dotify.model
 
-import androidx.databinding.ObservableField
+import java.io.Serializable
 
-class User {
-    var email: ObservableField<String> = ObservableField()
-    var username: ObservableField<String> = ObservableField()
-    var gender: ObservableField<String> = ObservableField()
-    var birthdate: ObservableField<String> = ObservableField()
-    var profile_photo: ObservableField<String> = ObservableField()
+class User :Serializable {
+    var UID: String=""
+    var email: String=""
+    var username: String=""
+    var gender: String=""
+    var birthdate: String=""
+    var profile_photo: String=""
 }
