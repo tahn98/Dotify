@@ -33,7 +33,7 @@
 
         <variable
             name="presenter"
-            type="com.vinova.dotify.view.SignUp" />
+            type="com.vinova.dotify.view.SignUpFragment" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

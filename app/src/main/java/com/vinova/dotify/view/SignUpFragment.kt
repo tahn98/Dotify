@@ -31,7 +31,7 @@ import com.vinova.dotify.model.User
 import java.util.*
 
 
-class SignUp : Fragment() {
+class SignUpFragment : Fragment() {
 
     private var email: ObservableField<String> = ObservableField()
     private var username: ObservableField<String> = ObservableField()
@@ -125,7 +125,7 @@ class SignUp : Fragment() {
         }
         binding.fbSignup.setOnClickListener {
             LoginManager.getInstance().logInWithReadPermissions(
-                this@SignUp, listOf(
+                this@SignUpFragment, listOf(
                     "public_profile", "email"
                 )
             )
@@ -143,10 +143,10 @@ class SignUp : Fragment() {
                     user.gender = gender.get()!!
                     user.birthdate = birthdate.get()!!
                     mViewModel!!.postUser(user)
-                    var browseIntent = Intent(activity, BrowseScreen::class.java)
+                    var browseIntent = Intent(activity, MainScreen::class.java)
                     browseIntent.putExtra("curUser",user)
                     startActivity(browseIntent)
-                    this@SignUp.activity?.finish()
+                    this@SignUpFragment.activity?.finish()
                 }
                 else
                 {
@@ -196,10 +196,10 @@ class SignUp : Fragment() {
                                 user.gender = "Male"
                                 user.birthdate = "01/01/2000"
                                 mViewModel!!.postUser(user)
-                                var browseIntent = Intent(activity, BrowseScreen::class.java)
+                                var browseIntent = Intent(activity, MainScreen::class.java)
                                 browseIntent.putExtra("curUser",user)
                                 startActivity(browseIntent)
-                                this@SignUp.activity?.finish()
+                                this@SignUpFragment.activity?.finish()
                             }
 
                         }

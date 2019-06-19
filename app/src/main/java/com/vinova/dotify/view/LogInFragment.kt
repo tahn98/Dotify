@@ -30,7 +30,7 @@ import com.vinova.dotify.viewmodel.UserViewModel
 import kotlinx.android.synthetic.main.log_in.view.*
 import java.util.*
 
-class LogIn : Fragment() {
+class LogInFragment : Fragment() {
     private var email: ObservableField<String> = ObservableField()
     private var password: ObservableField<String> = ObservableField()
     private var isFull: ObservableField<Boolean> = ObservableField(false)
@@ -69,7 +69,6 @@ class LogIn : Fragment() {
             }
         })
     }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -91,10 +90,10 @@ class LogIn : Fragment() {
                         mViewModel?.getUser(data)?.observe(this, Observer<User> { user ->
                             run {
                                 if (user.UID != "-1") {
-                                    var browseIntent = Intent(activity, BrowseScreen::class.java)
+                                    var browseIntent = Intent(activity, MainScreen::class.java)
                                     browseIntent.putExtra("curUser", user)
                                     startActivity(browseIntent)
-                                    this@LogIn.activity?.finish()
+                                    this@LogInFragment.activity?.finish()
                                 } else {
                                     AlertDialog.Builder(activity)
                                         .setTitle("Thông báo")
@@ -117,7 +116,7 @@ class LogIn : Fragment() {
         }
         binding.fbLogin.setOnClickListener {
             LoginManager.getInstance().logInWithReadPermissions(
-                this@LogIn, listOf(
+                this@LogInFragment, listOf(
                     "public_profile", "email"
                 )
             )
@@ -139,10 +138,10 @@ class LogIn : Fragment() {
                     mViewModel?.getUser(data)?.observe(this, Observer<User> { user ->
                         run {
                             if (user.UID != "-1") {
-                                var browseIntent = Intent(activity, BrowseScreen::class.java)
+                                var browseIntent = Intent(activity, MainScreen::class.java)
                                 browseIntent.putExtra("curUser", user)
                                 startActivity(browseIntent)
-                                this@LogIn.activity?.finish()
+                                this@LogInFragment.activity?.finish()
                             } else {
                                 AlertDialog.Builder(activity)
                                     .setTitle("Thông báo")
@@ -156,8 +155,6 @@ class LogIn : Fragment() {
             }
         })
     }
-
-
     fun checkEmpty() {
         if (email.get().isNullOrEmpty() ||
             password.get().isNullOrEmpty()
