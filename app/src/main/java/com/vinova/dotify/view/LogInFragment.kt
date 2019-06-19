@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 import com.vinova.dotify.R
 import kotlinx.android.synthetic.main.log_in.view.*
 
-class LogIn : Fragment() {
+class LogInFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,7 +26,7 @@ class LogIn : Fragment() {
     }
 
     private fun goToBrowseScreen(){
-        var browseIntent = Intent(activity, BrowseScreen::class.java)
+        var browseIntent = Intent(activity, MainScreen::class.java)
         startActivity(browseIntent)
     }
 

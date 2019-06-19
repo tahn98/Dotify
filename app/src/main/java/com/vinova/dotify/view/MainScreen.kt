@@ -1,16 +1,14 @@
 package com.vinova.dotify.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import com.vinova.dotify.R
 import kotlinx.android.synthetic.main.activity_browse_screen.*
 
 
-class BrowseScreen : AppCompatActivity() {
+class MainScreen : AppCompatActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,9 +18,18 @@ class BrowseScreen : AppCompatActivity() {
         setupToolBar()
 
         nav_view.setNavigationItemSelectedListener { p0 ->
-            p0.isChecked = true
-            drawer_layout.closeDrawers()
-
+            when(p0.itemId){
+                R.id.menu_brower -> {
+                    p0.isChecked = true
+                    goToBrowseFragment()
+                    drawer_layout.closeDrawers()
+                }
+                R.id.menu_yourmusic -> {
+                    p0.isChecked = true
+                    goToYourMusicFragment()
+                    drawer_layout.closeDrawers()
+                }
+            }
             true
         }
     }
@@ -42,5 +49,17 @@ class BrowseScreen : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun goToYourMusicFragment(){
+        supportFragmentManager.beginTransaction()
+            ?.replace(R.id.feature_container, YourMusicFragment())
+            .commit()
+    }
+
+    private fun goToBrowseFragment(){
+        supportFragmentManager.beginTransaction()
+            ?.replace(R.id.feature_container, BrowseFragment())
+            .commit()
     }
 }

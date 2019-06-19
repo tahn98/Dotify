@@ -15,12 +15,12 @@ class Authentication : AppCompatActivity() {
         val ft = supportFragmentManager.beginTransaction()
         if(type=="login")
         {
-            ft.replace(R.id.fragment_holder, LogIn())
+            ft.replace(R.id.fragment_holder, LogInFragment())
             ft.commit()
         }
         else
         {
-            ft.replace(R.id.fragment_holder, SignUp())
+            ft.replace(R.id.fragment_holder, SignUpFragment())
             ft.commit()
         }
     }

@@ -29,7 +29,7 @@ import com.vinova.dotify.databinding.SignUpBinding
 import com.vinova.dotify.model.Registration
 
 
-class SignUp : Fragment() {
+class SignUpFragment : Fragment() {
 
     private var email: ObservableField<String> = ObservableField()
     private var username: ObservableField<String> = ObservableField()
