@@ -28,7 +28,6 @@ class UserRepository {
     fun postUser(user: User){
         val mDatabase: DatabaseReference = FirebaseDatabase.getInstance().reference
         mDatabase.child("users").child(user.UID).setValue(user)
-
     }
 
     fun createUser(email: String, password: String): MutableLiveData<String>? {

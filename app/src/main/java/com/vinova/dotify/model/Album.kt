@@ -1,4 +1,6 @@
 package com.vinova.dotify.model
 
-class Album {
+import java.io.Serializable
+
+class Album : Serializable {
 }

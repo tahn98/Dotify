@@ -2,7 +2,6 @@ package com.vinova.dotify.view
 
 
 import android.app.AlertDialog
-import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -27,8 +26,6 @@ import com.vinova.dotify.R
 import com.vinova.dotify.databinding.LogInBinding
 import com.vinova.dotify.model.User
 import com.vinova.dotify.viewmodel.UserViewModel
-import kotlinx.android.synthetic.main.log_in.view.*
-import java.util.*
 
 class LogInFragment : Fragment() {
     private var email: ObservableField<String> = ObservableField()
@@ -83,6 +80,7 @@ class LogInFragment : Fragment() {
         binding.email = email
         binding.password = password
         binding.check = isFull
+
         binding.loginBtn.setOnClickListener {
             mViewModel?.logInUser(email.get()!!,password.get()!!)?.observe(this, Observer<String> { data ->
                 run {
@@ -114,6 +112,7 @@ class LogInFragment : Fragment() {
                 }
             })
         }
+
         binding.fbLogin.setOnClickListener {
             LoginManager.getInstance().logInWithReadPermissions(
                 this@LogInFragment, listOf(
