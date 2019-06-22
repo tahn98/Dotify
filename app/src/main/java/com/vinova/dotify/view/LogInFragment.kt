@@ -3,6 +3,7 @@ package com.vinova.dotify.view
 
 import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -84,6 +85,9 @@ class LogInFragment : Fragment() {
         binding.password = password
         binding.check = isFull
         binding.loginBtn.setOnClickListener {
+            val progressDialog = ProgressDialog(activity)
+            progressDialog.setMessage("Logging in...")
+            progressDialog.show()
             mViewModel?.logInUser(email.get()!!,password.get()!!)?.observe(this, Observer<String> { data ->
                 run {
                     if (data != "-1") {
@@ -101,10 +105,12 @@ class LogInFragment : Fragment() {
                                         .setPositiveButton(android.R.string.ok, null)
                                         .show()
                                 }
+                                progressDialog.dismiss()
                             }
                         })
                     }
                     else {
+                        progressDialog.dismiss()
                         AlertDialog.Builder(activity)
                             .setTitle("Thông báo")
                             .setMessage("Đã xảy ra lỗi trong quá trình đăng nhập. Vui lòng thử lại sau")

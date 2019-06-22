@@ -8,7 +8,7 @@
         <item name="colorAccent">#000000</item>
     </style>
 
-    <style name="TextLabel" parent="TextAppearance.AppCompat">
+    <style name="TextLabel" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
         <!-- Hint color and label color in FALSE state -->
         <item name="android:textColorHint">#B4B3B3</item>
         <item name="android:textSize">16sp</item>
@@ -16,6 +16,11 @@
         <item name="colorAccent">#000000</item>
         <item name="colorControlNormal">#000000</item>
         <item name="colorControlActivated">#000000</item>
+    </style>
+
+    <style name="error" parent="@android:style/TextAppearance">
+        <item name="android:textColor">#EB3F09</item> <!--apply the color you wat here -->
+        <item name="android:textSize">11dp</item>
     </style>
 
     <style name="NavigationView">

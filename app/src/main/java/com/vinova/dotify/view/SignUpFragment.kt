@@ -3,8 +3,12 @@ package com.vinova.dotify.view
 
 import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -61,7 +65,7 @@ class SignUpFragment : Fragment() {
                 .show()
         }
     }
-    private var date = DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
+    private var date = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
         myCalendar.set(Calendar.YEAR, year)
         myCalendar.set(Calendar.MONTH, month)
         myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
@@ -132,6 +136,9 @@ class SignUpFragment : Fragment() {
             LoginManager.getInstance().registerCallback(mCallbackManager, mCallback)
         }
         binding.signup.setOnClickListener {
+            val progressDialog = ProgressDialog(activity)
+            progressDialog.setMessage("Creating account...")
+            progressDialog.show()
             mViewModel?.createUser(email.get()!!,password.get()!!)?.observe(this, Observer<String>{data->run {
                 if(data != "-")
                 {
@@ -156,15 +163,29 @@ class SignUpFragment : Fragment() {
                         .setPositiveButton(android.R.string.ok, null)
                         .show()
                 }
+                progressDialog.dismiss()
             }})
         }
-
+        binding.emailField.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                if (!isEmailValid(email.get()!!))
+                    binding.emailContainer.error = "Your email is not correct."
+                else binding.emailContainer.error = null
+            }
+            else binding.emailContainer.error = null
+        }
+        binding.passField.onFocusChangeListener=View.OnFocusChangeListener{_,hasFocus->
+            if(!hasFocus){
+                if(!isPasswordValid(password.get()!!))
+                    binding.passContainer.error="Password must contain at least 8 characters, including upper, lowercase and number."
+                else binding.passContainer.error=null
+            }
+            else binding.passContainer.error=null
+        }
         //init instance to firebase authentication
         mAuth = FirebaseAuth.getInstance()
         return view
     }
-
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         super.onActivityResult(requestCode, resultCode, data)
         mCallbackManager?.onActivityResult(requestCode, resultCode, data)
@@ -221,7 +242,7 @@ class SignUpFragment : Fragment() {
             username.get().isNullOrEmpty() ||
             birthdate.get().isNullOrEmpty() ||
             gender.get().isNullOrEmpty() ||
-            password.get().isNullOrEmpty()
+            password.get().isNullOrEmpty()|| !isEmailValid(email.get()!!) || !isPasswordValid(password.get()!!)
         ) {
             isFull.set(false)
         }
