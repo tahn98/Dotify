@@ -31,6 +31,7 @@ class MainScreen : AppCompatActivity() {
             }
             true
         }
+        goToBrowseFragment()
     }
 
     private fun setupToolBar(){
@@ -51,14 +52,12 @@ class MainScreen : AppCompatActivity() {
     }
 
     private fun goToYourMusicFragment(){
-        supportFragmentManager.beginTransaction()
-            ?.replace(R.id.feature_container, YourMusicFragment())
+        supportFragmentManager.beginTransaction().replace(R.id.feature_container, YourMusicFragment())
             .commit()
     }
 
     private fun goToBrowseFragment(){
-        supportFragmentManager.beginTransaction()
-            ?.replace(R.id.feature_container, BrowseFragment())
+        supportFragmentManager.beginTransaction().replace(R.id.feature_container, BrowseFragment())
             .commit()
     }
 

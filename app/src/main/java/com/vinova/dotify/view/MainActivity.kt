@@ -12,7 +12,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         login_btn.setOnClickListener {
             val intent = Intent(this, Authentication::class.java)
             intent.putExtra("screen", "login")

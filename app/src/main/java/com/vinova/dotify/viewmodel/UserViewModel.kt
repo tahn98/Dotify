@@ -8,7 +8,6 @@ import com.vinova.dotify.repository.UserRepository
 
 class UserViewModel :ViewModel() {
     private var check: MutableLiveData<Boolean>? = null
-    private var uidResult: MutableLiveData<String>? = null
     private var user: MutableLiveData<User>? = null
     private var userModel: UserRepository = UserRepository()
     fun checkUser(UID:String): MutableLiveData<Boolean>? {
