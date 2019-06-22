@@ -1,5 +1,6 @@
 package com.vinova.dotify.model
 
+
 class Music {
     var id:String?=null
     var artist:String?=null
@@ -10,3 +11,4 @@ class Music {
     var posterURL:String?=null
     var description:String?=null
 }
+

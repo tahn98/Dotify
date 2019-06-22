@@ -222,7 +222,6 @@ class SignUpFragment : Fragment() {
                                 startActivity(browseIntent)
                                 this@SignUpFragment.activity?.finish()
                             }
-
                         }
                     })
 
