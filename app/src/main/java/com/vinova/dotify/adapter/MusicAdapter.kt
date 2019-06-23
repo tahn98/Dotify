@@ -5,18 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.vinova.dotify.R
 import com.vinova.dotify.model.Music
-import kotlinx.android.synthetic.main.list_album_custom_widget.view.*
+import kotlinx.android.synthetic.main.list_album_music_widget.view.*
 
-class YourSongAdapter(private val context: Context,
+class MusicAdapter(private val context: Context,
                       private val listMusic : MutableList<Music>,
                       private val clickListener : (Music) -> Unit) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val inflater = LayoutInflater.from(parent.context).inflate(R.layout.list_album_custom_widget, parent, false)
 
+        val inflater = LayoutInflater.from(parent.context).inflate(R.layout.list_album_music_widget, parent, false)
         return SongViewHolder(inflater)
     }
 
@@ -31,18 +29,17 @@ class YourSongAdapter(private val context: Context,
     inner class SongViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
 
         fun bind(music: Music, clickListener: (Music) -> Unit){
-            itemView.album_name.text = music.name
-            itemView.album_artist.text = music.artist
+            itemView.music_name.text = music.name
+            itemView.music_artist.text = music.artist
 
-            Glide.with(context?.applicationContext ?: return)
-                .load(music.photoURL)
-                .thumbnail(0.5f)
-                .error(R.drawable.ic_launcher_background)
-                .transition(DrawableTransitionOptions.withCrossFade())
-                .into(itemView.album_img)
+//            Glide.with(context?.applicationContext ?: return)
+//                .load(music.photoURL)
+//                .thumbnail(0.5f)
+//                .error(R.drawable.ic_launcher_background)
+//                .transition(DrawableTransitionOptions.withCrossFade())
+//                .into(itemView.album_img)
 
-            itemView.setOnClickListener { clickListener(Music()) }
+            itemView.setOnClickListener { clickListener(music) }
         }
     }
-
 }

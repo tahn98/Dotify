@@ -1,5 +1,6 @@
 package com.vinova.dotify.view
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,9 +13,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.vinova.dotify.R
 import com.vinova.dotify.adapter.YourAlbumAdapter
+import com.vinova.dotify.model.Music
 import com.vinova.dotify.model.MusicCollection
+import com.vinova.dotify.utils.BaseConst
 import com.vinova.dotify.viewmodel.YourMusicViewModel
 import kotlinx.android.synthetic.main.album_fragment.*
+import java.io.Serializable
 
 class AlbumFragment : Fragment(){
 
@@ -37,7 +41,6 @@ class AlbumFragment : Fragment(){
                     if(it != null){
                         listAlbum.addAll(it)
                         albumAdapter.notifyDataSetChanged()
-                        Log.d("it", it.toString())
                     }
                 }
             })
@@ -48,13 +51,18 @@ class AlbumFragment : Fragment(){
         super.onActivityCreated(savedInstanceState)
 
         album_recycleView.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-        albumAdapter = YourAlbumAdapter( context!! ,listAlbum) { musicCollection : MusicCollection -> itemClicked(musicCollection)}
+        albumAdapter = YourAlbumAdapter( context!! , listAlbum) { musicCollection : MusicCollection -> itemClicked(musicCollection)}
         album_recycleView.adapter = albumAdapter
         albumAdapter.notifyDataSetChanged()
 
     }
 
     private fun itemClicked(album: MusicCollection){
-        Log.d("abc", "Abc")
+        var listMusicOfAlbum = album.listMusic?.values?.toList()
+        var albumIntent  = Intent(context, AlbumScreen::class.java)
+
+        albumIntent.putExtra(BaseConst.passlistmusicalbum, listMusicOfAlbum as Serializable)
+        startActivity(albumIntent)
+
     }
 }

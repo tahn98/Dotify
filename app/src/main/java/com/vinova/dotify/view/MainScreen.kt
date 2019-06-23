@@ -60,4 +60,6 @@ class MainScreen : AppCompatActivity() {
         supportFragmentManager.beginTransaction().replace(R.id.feature_container, BrowseFragment())
             .commit()
     }
+
+
 }
