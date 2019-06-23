@@ -38,14 +38,56 @@ class FeedRepository {
                         result.add(data!!)
                     }
                     res.value=result.toList()
-                    /*val temp=dataSnapshot.value as HashMap<String,MusicCollection>
+                }
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+        })
+        return res
+    }
+
+    fun getAlbum(): MutableLiveData<List<MusicCollection>> {
+        val res = MutableLiveData<List<MusicCollection>>()
+        val mDatabase: DatabaseReference = FirebaseDatabase.getInstance().reference
+        val ref = mDatabase.child("browse").child("album")
+        ref.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if(dataSnapshot.exists())
+                {
                     val result:MutableCollection<MusicCollection> = ArrayList<MusicCollection>()
-                    for (data in temp.values)
-                    {
-                        var element=MusicCollection()
-                        result.add(data)
+                    for ( postSnapshot in dataSnapshot.children) {
+                        var data=postSnapshot.getValue(MusicCollection::class.java)
+                        result.add(data!!)
                     }
-                    res.value=result.toList()*/
+                    res.value=result.toList()
+                }
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+        })
+        return res
+    }
+
+    fun getGenre(): MutableLiveData<List<MusicCollection>> {
+        val res = MutableLiveData<List<MusicCollection>>()
+        val mDatabase: DatabaseReference = FirebaseDatabase.getInstance().reference
+        val ref = mDatabase.child("browse").child("genre")
+        ref.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if(dataSnapshot.exists())
+                {
+                    val result:MutableCollection<MusicCollection> = ArrayList<MusicCollection>()
+                    for ( postSnapshot in dataSnapshot.children) {
+                        var data=postSnapshot.getValue(MusicCollection::class.java)
+                        result.add(data!!)
+                    }
+                    res.value=result.toList()
                 }
             }
 
