@@ -21,6 +21,10 @@ class AlbumScreen : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_album_screen)
 
+        img_album_back.setOnClickListener {
+            super.onBackPressed()
+        }
+
         listMusic = intent.extras?.get(BaseConst.passlistmusicalbum) as MutableList<Music>
 
         list_music_container.layoutManager = LinearLayoutManager(applicationContext, RecyclerView.VERTICAL, false)

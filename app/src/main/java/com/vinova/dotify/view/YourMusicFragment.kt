@@ -20,14 +20,34 @@ class YourMusicFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        fragmentManager?.beginTransaction()?.replace(R.id.tab_container, ArtistFragment.newInstance(), null)
+            ?.commit()
+        artist_btn.setImageResource(R.drawable.ic_artists_btn_selected)
+
+        artist_btn.setOnClickListener {
+            resetSelectedImage()
+            artist_btn.setImageResource(R.drawable.ic_artists_btn_selected)
+        }
+
         albums_btn.setOnClickListener {
+            resetSelectedImage()
             fragmentManager?.beginTransaction()?.replace(R.id.tab_container, AlbumFragment.newInstance(), null)
                 ?.commit()
+            albums_btn.setImageResource(R.drawable.ic_album_btn_selected)
         }
 
         songs_btn.setOnClickListener {
+            resetSelectedImage()
+            songs_btn.setImageResource(R.drawable.ic_songs_btn_selected)
             fragmentManager?.beginTransaction()?.replace(R.id.tab_container, SongsFragment.newInstance(), null)
                 ?.commit()
         }
+    }
+
+    private fun resetSelectedImage(){
+        artist_btn.setImageResource(R.drawable.ic_artists_btn)
+        albums_btn.setImageResource(R.drawable.ic_album_btn)
+        songs_btn.setImageResource(R.drawable.ic_songs_btn)
+        playlists_btn.setImageResource(R.drawable.ic_playlists_btn)
     }
 }
