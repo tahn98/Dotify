@@ -13,8 +13,8 @@ class CustomPagerAdapter(val context: Context, val musics: List<Music> ) : Pager
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val binding = ItemLatestCollectionBinding.inflate(LayoutInflater.from(context), container, false)
-        Glide.with(context).load(musics!![position].backdropURL!!).thumbnail(0.01f).into(binding.backdrop)
-        Glide.with(context).load(musics!![position].posterURL!!).thumbnail(0.01f).into(binding.poster)
+        Glide.with(context).load(musics[position].backdropURL!!).thumbnail(0.01f).into(binding.backdrop)
+        Glide.with(context).load(musics[position].posterURL!!).thumbnail(0.01f).into(binding.poster)
         binding.name.text=musics[position].name
         binding.description.text=musics[position].description
         container.addView(binding.root)
@@ -31,6 +31,6 @@ class CustomPagerAdapter(val context: Context, val musics: List<Music> ) : Pager
     }
 
     override fun getCount(): Int {
-        return musics.size ?: 0
+        return musics.size
     }
 }

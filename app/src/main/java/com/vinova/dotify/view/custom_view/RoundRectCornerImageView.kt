@@ -8,7 +8,7 @@ import android.util.AttributeSet
 import android.widget.ImageView
 
 class RoundRectCornerImageView : ImageView {
-    private val radius = 90.0f
+    private val radius = 180.0f
     private var path: Path? = null
     private var rect: RectF? = null
 
