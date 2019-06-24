@@ -59,17 +59,6 @@
                 attrs:layout_constraintLeft_toLeftOf="parent"
                 attrs:layout_constraintTop_toBottomOf="@id/viewPager" />
 
-            <LinearLayout
-                android:id="@+id/divider"
-                android:layout_width="match_parent"
-                android:layout_height="0.25dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginRight="20dp"
-                android:background="#CCCBCB"
-                android:orientation="vertical"
-                attrs:layout_constraintTop_toBottomOf="@id/suggested_section" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rcv_playlist"
@@ -77,7 +66,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="7dp"
                 android:layout_marginTop="5dp"
-                attrs:layout_constraintTop_toBottomOf="@id/divider" />
+                attrs:layout_constraintTop_toBottomOf="@id/suggested_section" />
 
             <TextView
                 android:id="@+id/album_section"
@@ -98,17 +87,7 @@
                 attrs:layout_constraintLeft_toLeftOf="parent"
                 attrs:layout_constraintTop_toBottomOf="@id/rcv_playlist" />
 
-            <LinearLayout
-                android:id="@+id/divider1"
-                android:layout_width="match_parent"
-                android:layout_height="0.25dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginRight="20dp"
-                android:background="#CCCBCB"
-                android:orientation="vertical"
-                attrs:layout_constraintTop_toBottomOf="@id/album_section" />
+
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rcv_album"
@@ -116,7 +95,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/divider1" />
+                app:layout_constraintTop_toBottomOf="@id/album_section" />
 
             <TextView
                 android:id="@+id/genre_section"
@@ -137,17 +116,7 @@
                 attrs:layout_constraintLeft_toLeftOf="parent"
                 attrs:layout_constraintTop_toBottomOf="@id/rcv_album" />
 
-            <LinearLayout
-                android:id="@+id/divider2"
-                android:layout_width="match_parent"
-                android:layout_height="0.25dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginRight="20dp"
-                android:background="#CCCBCB"
-                android:orientation="vertical"
-                attrs:layout_constraintTop_toBottomOf="@id/genre_section" />
+
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rcv_genre"
@@ -156,7 +125,7 @@
                 android:layout_marginLeft="7dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="10dp"
-                attrs:layout_constraintTop_toBottomOf="@id/divider2" />
+                attrs:layout_constraintTop_toBottomOf="@id/genre_section" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
