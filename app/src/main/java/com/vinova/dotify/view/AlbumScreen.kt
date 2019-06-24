@@ -89,10 +89,10 @@ class AlbumScreen : AppCompatActivity() {
 
         }
         share_button.setOnClickListener {
-            val share = Intent(android.content.Intent.ACTION_SEND)
+            val share = Intent(Intent.ACTION_SEND)
             share.type = "text/plain"
             share.putExtra(Intent.EXTRA_SUBJECT, album.name)
-            share.putExtra(Intent.EXTRA_TEXT, album.listMusic!!.values.toList().get(0).musicURL)
+            share.putExtra(Intent.EXTRA_TEXT, album.listMusic!!.values.toList()[0].musicURL)
             startActivity(Intent.createChooser(share, "Share link"))
         }
         list_music_container.layoutManager = LinearLayoutManager(applicationContext, RecyclerView.VERTICAL, false)
@@ -104,10 +104,10 @@ class AlbumScreen : AppCompatActivity() {
         musicAdapter.notifyDataSetChanged()
     }
 
-    private fun itemClicked(music: Music, pos: Int) {
+    private fun itemClicked(music: Music, pos: Int?) {
         var musicIntent = Intent(this, PlayScreen::class.java)
         musicIntent.putExtra(BaseConst.passlistmusicobject, listMusic as Serializable)
-        musicIntent.putExtra(BaseConst.passmusicobject, pos - 1)
+        musicIntent.putExtra(BaseConst.passmusicobject, pos!! - 1)
         startActivity(musicIntent)
     }
 

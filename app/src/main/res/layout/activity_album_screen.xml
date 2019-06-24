@@ -72,6 +72,7 @@
         app:layout_constraintTop_toTopOf="@id/album_background_imd" />
 
     <ImageView
+        android:scaleType="fitXY"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:id="@+id/like_button"
@@ -83,6 +84,7 @@
         app:layout_constraintTop_toTopOf="@id/album_background_imd" />
 
     <ImageView
+        android:scaleType="fitXY"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:id="@+id/share_button"

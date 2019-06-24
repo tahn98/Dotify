@@ -1,10 +1,10 @@
 package com.vinova.dotify.view
 
+
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
@@ -14,11 +14,13 @@ import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
+import com.bumptech.glide.request.RequestOptions.bitmapTransform
 import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
 import com.vinova.dotify.R
 import com.vinova.dotify.model.Music
 import com.vinova.dotify.utils.BaseConst
 import com.vinova.dotify.utils.HeadsetPlugReceiver
+import jp.wasabeef.glide.transformations.BlurTransformation
 import kotlinx.android.synthetic.main.activity_play_screen.*
 
 
@@ -54,14 +56,15 @@ class PlayScreen : AppCompatActivity() {
             StrictMode.setThreadPolicy(policy)
         }
 
+
         listMusic = intent.extras?.get(BaseConst.passlistmusicobject) as MutableList<Music>?
 
         position = 0
-//        if (intent.extras?.get(BaseConst.passmusicobject) as Int is Int){
-//            position = intent.extras?.get(BaseConst.passmusicobject) as Int
-//        }else{
-//            position = 0
-//        }
+        position = if (intent.extras?.get(BaseConst.passmusicobject) as Int? is Int){
+            intent.extras?.get(BaseConst.passmusicobject) as Int
+        }else{
+            0
+        }
 
         initMediaPlayer(position!!)
 
@@ -169,6 +172,17 @@ class PlayScreen : AppCompatActivity() {
         this.registerReceiver(updateUIReceiver, intentFilter)
     }
 
+    private fun setView(positon : Int){
+        music_play_name.text = listMusic?.get(positon)?.name!!
+        music_artist_name.text = listMusic?.get(positon)?.artist!!
+
+        Glide.with(applicationContext)
+            .load(listMusic!![positon].photoURL)
+            .thumbnail(0.001f)
+            .apply(bitmapTransform(BlurTransformation(18, 3)))
+            .into(cards_brands)
+    }
+
     private fun initMediaPlayer(position : Int){
         if(mediaPlayer == null){
             mediaPlayer = MediaPlayer()
@@ -177,13 +191,15 @@ class PlayScreen : AppCompatActivity() {
             mediaPlayer?.reset()
         }
 
-        mediaPlayer?.setAudioStreamType(AudioManager.STREAM_MUSIC)
-        mediaPlayer?.setOnCompletionListener {
-            MediaPlayer.OnCompletionListener { p0 ->
-                p0?.stop()
-                p0?.reset()
-            }
-        }
+        setView(position)
+
+//        mediaPlayer?.setAudioStreamType(AudioManager.STREAM_MUSIC)
+//        mediaPlayer?.setOnCompletionListener {
+//            MediaPlayer.OnCompletionListener { p0 ->
+//                p0?.stop()
+//                p0?.reset()
+//            }
+//        }
 
         mediaPlayer?.setDataSource(listMusic?.get(position)?.musicURL)
         mediaPlayer?.prepare()
