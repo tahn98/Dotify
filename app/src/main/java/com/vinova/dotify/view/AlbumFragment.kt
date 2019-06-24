@@ -39,6 +39,7 @@ class AlbumFragment : Fragment(){
                     nothing_text.visibility = View.INVISIBLE
                     if(it != null){
                         Log.d("abc", it.toString())
+                        listAlbum.clear()
                         listAlbum.addAll(it)
                         albumAdapter.notifyDataSetChanged()
                     }
