@@ -13,12 +13,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.vinova.dotify.R
 import com.vinova.dotify.adapter.YourAlbumAdapter
-import com.vinova.dotify.model.Music
 import com.vinova.dotify.model.MusicCollection
 import com.vinova.dotify.utils.BaseConst
 import com.vinova.dotify.viewmodel.YourMusicViewModel
 import kotlinx.android.synthetic.main.album_fragment.*
-import java.io.Serializable
 
 class AlbumFragment : Fragment(){
 
@@ -38,7 +36,9 @@ class AlbumFragment : Fragment(){
         mYourMusicViewViewModel.getAlbulm("HkWQty0QRTh9eEaBdCngJQuU1uf2")
             ?.observe(this, Observer <MutableList<MusicCollection>?>{
                 run{
+                    nothing_text.visibility = View.INVISIBLE
                     if(it != null){
+                        Log.d("abc", it.toString())
                         listAlbum.addAll(it)
                         albumAdapter.notifyDataSetChanged()
                     }
@@ -58,11 +58,13 @@ class AlbumFragment : Fragment(){
     }
 
     private fun itemClicked(album: MusicCollection){
-        var listMusicOfAlbum = album.listMusic?.values?.toList()
+        gotoAlbumScreen(album)
+    }
+
+    fun gotoAlbumScreen(album: MusicCollection){
         var albumIntent  = Intent(context, AlbumScreen::class.java)
+        albumIntent.putExtra(BaseConst.passMusicCollection, album)
 
-        albumIntent.putExtra(BaseConst.passlistmusicalbum, listMusicOfAlbum as Serializable)
         startActivity(albumIntent)
-
     }
 }

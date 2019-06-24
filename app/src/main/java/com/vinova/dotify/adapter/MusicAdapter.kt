@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.vinova.dotify.R
 import com.vinova.dotify.model.Music
 import kotlinx.android.synthetic.main.list_album_music_widget.view.*
@@ -32,12 +34,12 @@ class MusicAdapter(private val context: Context,
             itemView.music_name.text = music.name
             itemView.music_artist.text = music.artist
 
-//            Glide.with(context?.applicationContext ?: return)
-//                .load(music.photoURL)
-//                .thumbnail(0.5f)
-//                .error(R.drawable.ic_launcher_background)
-//                .transition(DrawableTransitionOptions.withCrossFade())
-//                .into(itemView.album_img)
+            Glide.with(context?.applicationContext ?: return)
+                .load(music.photoURL)
+                .thumbnail(0.5f)
+                .error(R.drawable.icon_music_placeholder)
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .into(itemView.music_img)
 
             itemView.setOnClickListener { clickListener(music) }
         }

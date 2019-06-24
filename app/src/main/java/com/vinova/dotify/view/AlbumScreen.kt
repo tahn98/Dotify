@@ -1,19 +1,22 @@
 package com.vinova.dotify.view
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.vinova.dotify.R
 import com.vinova.dotify.adapter.MusicAdapter
 import com.vinova.dotify.model.Music
+import com.vinova.dotify.model.MusicCollection
 import com.vinova.dotify.utils.BaseConst
 import kotlinx.android.synthetic.main.activity_album_screen.*
-import kotlinx.android.synthetic.main.songs_fragment.*
 
 class AlbumScreen : AppCompatActivity() {
 
+    private lateinit var album : MusicCollection
     private var listMusic : MutableList<Music> = arrayListOf()
     lateinit var musicAdapter : MusicAdapter
 
@@ -25,18 +28,46 @@ class AlbumScreen : AppCompatActivity() {
             super.onBackPressed()
         }
 
-        listMusic = intent.extras?.get(BaseConst.passlistmusicalbum) as MutableList<Music>
+        getBackAlbum()
+        initView()
+
+    }
+
+    private fun getBackAlbum(){
+        album = intent.extras?.get(BaseConst.passMusicCollection) as MusicCollection
+        listMusic = album.listMusic?.values?.toList() as MutableList<Music>
+    }
+
+    private fun initView(){
+        Glide
+            .with(this)
+            .load(album.photoURL)
+            .centerCrop()
+            .into(photo_album_img)
+
+        album_name.text = album.name
 
         list_music_container.layoutManager = LinearLayoutManager(applicationContext, RecyclerView.VERTICAL, false)
         musicAdapter = MusicAdapter(applicationContext, listMusic){
-             music : Music -> itemClicked(music)
+                music : Music -> itemClicked(music)
         }
 
         list_music_container.adapter = musicAdapter
         musicAdapter.notifyDataSetChanged()
+
+//        Glide.with(this)
+//            .load(cover)
+//            .thumbnail(0.5f)
+//            .error(R.drawable.ic_launcher_background)
+//            .transition(DrawableTransitionOptions.withCrossFade())
+//            .into(photo_album_img)
     }
 
     private fun itemClicked(music: Music) {
-        Log.d("abc", "abc")
+        var musicIntent = Intent(this, PlayScreen::class.java)
+
+        musicIntent.putExtra(BaseConst.passmusicobject, music)
+
+        startActivity(musicIntent)
     }
 }

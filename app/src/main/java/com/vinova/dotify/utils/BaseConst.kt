@@ -2,6 +2,7 @@ package com.vinova.dotify.utils
 
 class BaseConst{
     companion object{
-        val passlistmusicalbum = "PASSLISTMUSICALBUM"
+        val passMusicCollection = "PASSLISTMUSICALBUM"
+        val passmusicobject = "MUSICOBJECT"
     }
 }
