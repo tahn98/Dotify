@@ -1,5 +1,9 @@
 package com.vinova.dotify.view
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Bundle
@@ -7,12 +11,19 @@ import android.os.Handler
 import android.os.StrictMode
 import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
+import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
 import com.vinova.dotify.R
 import com.vinova.dotify.model.Music
 import com.vinova.dotify.utils.BaseConst
+import com.vinova.dotify.utils.HeadsetPlugReceiver
 import kotlinx.android.synthetic.main.activity_play_screen.*
 
+
 class PlayScreen : AppCompatActivity() {
+
     companion object{
         var mediaPlayer : MediaPlayer? = null
     }
@@ -24,11 +35,18 @@ class PlayScreen : AppCompatActivity() {
     private var next : Boolean = false
     private var repeat : Boolean = false
     private var random : Boolean = false
+    private var headsetPlugReceiver :HeadsetPlugReceiver?=  null
+    private var updateUIReceiver: BroadcastReceiver? = null
+    private var state:String?="unknow"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_play_screen)
-
+        headsetPlugReceiver= HeadsetPlugReceiver()
+        var intentFilter = IntentFilter()
+        intentFilter.addAction("android.intent.action.HEADSET_PLUG")
+        registerReceiver(headsetPlugReceiver, intentFilter)
+        registerReceiver(updateUIReceiver, IntentFilter("broadCastName"))
         if (android.os.Build.VERSION.SDK_INT > 9) {
             val policy: StrictMode.ThreadPolicy =
                 StrictMode.ThreadPolicy.Builder().permitAll().build()
@@ -101,6 +119,54 @@ class PlayScreen : AppCompatActivity() {
                 mediaPlayer?.pause()
             }
         }
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        if (headsetPlugReceiver != null) {
+            unregisterReceiver(headsetPlugReceiver)
+            headsetPlugReceiver = null
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        this.unregisterReceiver(this.updateUIReceiver)
+    }
+    override fun onResume() {
+        super.onResume()
+        val intentFilter = IntentFilter(
+            "android.intent.action.MAIN"
+        )
+
+        updateUIReceiver = object : BroadcastReceiver() {
+
+            override fun onReceive(context: Context, intent: Intent) {
+                //extract our message from intent
+                state = intent.getStringExtra("state")
+                if(state=="true")
+                {
+                    val factory = DrawableCrossFadeFactory.Builder().setCrossFadeEnabled(true).build()
+
+                    Glide.with(context)
+                        .load(R.drawable.headphone)
+                        .transition(withCrossFade(factory))
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(type_speaker)
+                }
+                else{
+                    val factory = DrawableCrossFadeFactory.Builder().setCrossFadeEnabled(true).build()
+
+                    Glide.with(context)
+                        .load(R.drawable.internal_speaker)
+                        .transition(withCrossFade(factory))
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(type_speaker)
+                }
+
+            }
+        }
+        //registering our receiver
+        this.registerReceiver(updateUIReceiver, intentFilter)
     }
 
     private fun initMediaPlayer(position : Int){
