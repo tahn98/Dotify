@@ -56,4 +56,30 @@ class YourMusicRepository{
             })
         return listMusics
     }
+
+    fun getYourArtist(UID : String) : MutableLiveData<MutableList<MusicCollection>>? {
+        var listArtist : MutableLiveData<MutableList<MusicCollection>> = MutableLiveData()
+        listArtist.value = null
+        var mData : DatabaseReference = FirebaseDatabase.getInstance().reference
+
+        mData.child("users")
+            .child(UID)
+            .child("listArtists")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
+                    throw p0.toException()
+                }
+
+                override fun onDataChange(p0: DataSnapshot) {
+                    var listTemp : MutableList<MusicCollection> = arrayListOf()
+                    listTemp.clear()
+                    for (data in p0.children){
+                        val albumModel : MusicCollection = data.getValue(MusicCollection::class.java)!!
+                        listTemp.add(albumModel)
+                    }
+                    listArtist?.value = listTemp
+                }
+            })
+        return listArtist
+    }
 }

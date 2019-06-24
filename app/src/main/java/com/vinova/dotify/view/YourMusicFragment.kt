@@ -27,13 +27,15 @@ class YourMusicFragment : Fragment() {
         artist_btn.setOnClickListener {
             resetSelectedImage()
             artist_btn.setImageResource(R.drawable.ic_artists_btn_selected)
+            fragmentManager?.beginTransaction()?.replace(R.id.tab_container, ArtistFragment.newInstance(), null)
+                ?.commit()
         }
 
         albums_btn.setOnClickListener {
             resetSelectedImage()
+            albums_btn.setImageResource(R.drawable.ic_album_btn_selected)
             fragmentManager?.beginTransaction()?.replace(R.id.tab_container, AlbumFragment.newInstance(), null)
                 ?.commit()
-            albums_btn.setImageResource(R.drawable.ic_album_btn_selected)
         }
 
         songs_btn.setOnClickListener {

@@ -14,6 +14,7 @@ import kotlinx.android.synthetic.main.list_album_custom_widget.view.*
 class YourAlbumAdapter(private val context: Context,
                        private val listAlbulm : MutableList<MusicCollection>,
                        private val clickListener : (MusicCollection) -> Unit) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context).inflate(R.layout.list_album_custom_widget, parent, false)
 
