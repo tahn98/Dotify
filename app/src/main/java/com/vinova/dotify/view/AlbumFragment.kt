@@ -64,6 +64,7 @@ class AlbumFragment : Fragment(){
     fun gotoAlbumScreen(album: MusicCollection){
         var albumIntent  = Intent(context, AlbumScreen::class.java)
         albumIntent.putExtra(BaseConst.passMusicCollection, album)
+        albumIntent.putExtra("Type", "ALBUM")
 
         startActivity(albumIntent)
     }

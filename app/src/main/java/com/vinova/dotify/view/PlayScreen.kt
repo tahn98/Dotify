@@ -37,11 +37,13 @@ class PlayScreen : AppCompatActivity() {
         }
 
         listMusic = intent.extras?.get(BaseConst.passlistmusicobject) as MutableList<Music>?
-        if (intent.extras?.get(BaseConst.passmusicobject) as Int is Int){
-            position = intent.extras?.get(BaseConst.passmusicobject) as Int
-        }else{
-            position = 0
-        }
+
+        position = 0
+//        if (intent.extras?.get(BaseConst.passmusicobject) as Int is Int){
+//            position = intent.extras?.get(BaseConst.passmusicobject) as Int
+//        }else{
+//            position = 0
+//        }
 
         initMediaPlayer(position!!)
 

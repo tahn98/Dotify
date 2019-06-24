@@ -23,6 +23,7 @@ import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.kaopiz.kprogresshud.KProgressHUD
 import com.vinova.dotify.R
 import com.vinova.dotify.databinding.LogInBinding
 import com.vinova.dotify.model.User
@@ -83,37 +84,33 @@ class LogInFragment : Fragment() {
         binding.check = isFull
 
         binding.loginBtn.setOnClickListener {
-            val progressDialog = ProgressDialog(activity)
-            progressDialog.setMessage("Logging in...")
-            progressDialog.show()
+            val loading= KProgressHUD.create(context)
+                .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
+                .setLabel("Logging in ...")
+                .setCancellable(false)
+                .setAnimationSpeed(1)
+                .setDimAmount(5f)
+            loading.show()
             mViewModel?.logInUser(email.get()!!,password.get()!!)?.observe(this, Observer<String> { data ->
                 run {
                     if (data != "-1") {
                         mViewModel?.getUser(data)?.observe(this, Observer<User> { user ->
                             run {
-                                if (user.UID != "-1") {
+                                if (user.uid != "-1") {
                                     var browseIntent = Intent(activity, MainScreen::class.java)
                                     browseIntent.putExtra("curUser", user)
                                     startActivity(browseIntent)
                                     this@LogInFragment.activity?.finish()
                                 } else {
-                                    AlertDialog.Builder(activity)
-                                        .setTitle("Thông báo")
-                                        .setMessage("Đã xảy ra lỗi trong quá trình đăng nhập. Vui lòng thử lại sau")
-                                        .setPositiveButton(android.R.string.ok, null)
-                                        .show()
+                                    createErrorDialog()
                                 }
-                                progressDialog.dismiss()
+                                loading.dismiss()
                             }
                         })
                     }
                     else {
-                        progressDialog.dismiss()
-                        AlertDialog.Builder(activity)
-                            .setTitle("Thông báo")
-                            .setMessage("Đã xảy ra lỗi trong quá trình đăng nhập. Vui lòng thử lại sau")
-                            .setPositiveButton(android.R.string.ok, null)
-                            .show()
+                        loading.dismiss()
+                        createErrorDialog()
                     }
                 }
             })
@@ -130,6 +127,15 @@ class LogInFragment : Fragment() {
         mAuth = FirebaseAuth.getInstance()
         return view
     }
+
+    private fun createErrorDialog() {
+        AlertDialog.Builder(activity)
+            .setTitle("Thông báo")
+            .setMessage("Đã xảy ra lỗi trong quá trình đăng nhập. Vui lòng thử lại sau")
+            .setPositiveButton(android.R.string.ok, null)
+            .show()
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         super.onActivityResult(requestCode, resultCode, data)
         mCallbackManager?.onActivityResult(requestCode, resultCode, data)
@@ -137,25 +143,33 @@ class LogInFragment : Fragment() {
 
     private fun handleFacebookAccessToken(token: AccessToken) {
         val credential = FacebookAuthProvider.getCredential(token.token)
+        val loading= KProgressHUD.create(context)
+            .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
+            .setLabel("Logging in ...")
+            .setCancellable(false)
+            .setAnimationSpeed(1)
+            .setDimAmount(5f)
+        loading.show()
         mViewModel?.logInUser(credential)?.observe(this, Observer<String> { data ->
             run {
                 if (data != "-1") {
                     mViewModel?.getUser(data)?.observe(this, Observer<User> { user ->
                         run {
-                            if (user.UID != "-1") {
+                            if (user.uid != "-1") {
                                 val browseIntent = Intent(activity, MainScreen::class.java)
                                 browseIntent.putExtra("curUser", user)
                                 startActivity(browseIntent)
                                 this@LogInFragment.activity?.finish()
                             } else {
-                                AlertDialog.Builder(activity)
-                                    .setTitle("Thông báo")
-                                    .setMessage("Đã xảy ra lỗi trong quá trình đăng nhập. Vui lòng thử lại sau")
-                                    .setPositiveButton(android.R.string.ok, null)
-                                    .show()
+                                createErrorDialog()
                             }
                         }
                     })
+                    loading.dismiss()
+                }
+                else
+                {
+                    loading.dismiss()
                 }
             }
         })

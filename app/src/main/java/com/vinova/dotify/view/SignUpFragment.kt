@@ -143,7 +143,7 @@ class SignUpFragment : Fragment() {
                 if(data != "-")
                 {
                     var user = User()
-                    user.UID = data
+                    user.uid = data
                     user.email = email.get()!!
                     user.username = username.get()!!
                     user.profile_photo = ""
@@ -210,7 +210,7 @@ class SignUpFragment : Fragment() {
                                     .show()
                             } else {
                                 var user = User()
-                                user.UID = res.user.uid
+                                user.uid = res.user.uid
                                 user.email = res.user.email!!
                                 user.username = res.user.displayName!!
                                 user.profile_photo = res.user.photoUrl.toString()

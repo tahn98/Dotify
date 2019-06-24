@@ -3,7 +3,7 @@ package com.vinova.dotify.model
 import java.io.Serializable
 
 data class MusicCollection(
-   var backdrop : String ="",
+   var backdropURL : String ="",
    var photoURL : String = "",
    var artist : String = "",
    var itemCount : Int = 0,
