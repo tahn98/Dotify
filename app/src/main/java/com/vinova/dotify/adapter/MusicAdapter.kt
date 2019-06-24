@@ -25,21 +25,15 @@ class MusicAdapter(private val context: Context,
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        (holder as SongViewHolder).bind(listMusic[position], clickListener)
+        (holder as SongViewHolder).bind((position + 1).toString(), listMusic[position], clickListener)
     }
 
     inner class SongViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
 
-        fun bind(music: Music, clickListener: (Music) -> Unit){
+        fun bind(pos : String, music: Music, clickListener: (Music) -> Unit){
             itemView.music_name.text = music.name
             itemView.music_artist.text = music.artist
-
-            Glide.with(context?.applicationContext ?: return)
-                .load(music.photoURL)
-                .thumbnail(0.5f)
-                .error(R.drawable.icon_music_placeholder)
-                .transition(DrawableTransitionOptions.withCrossFade())
-                .into(itemView.music_img)
+            itemView.music_number.text = pos
 
             itemView.setOnClickListener { clickListener(music) }
         }
