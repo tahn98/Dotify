@@ -7,11 +7,13 @@ import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions.bitmapTransform
 import com.vinova.dotify.R
 import com.vinova.dotify.adapter.MusicAdapter
 import com.vinova.dotify.model.Music
 import com.vinova.dotify.model.MusicCollection
 import com.vinova.dotify.utils.BaseConst
+import jp.wasabeef.glide.transformations.BlurTransformation
 import kotlinx.android.synthetic.main.activity_album_screen.*
 
 class AlbumScreen : AppCompatActivity() {
@@ -39,6 +41,12 @@ class AlbumScreen : AppCompatActivity() {
     }
 
     private fun initView(){
+        Glide
+            .with(this)
+            .load(album.photoURL)
+            .thumbnail(0.001f)
+            .apply(bitmapTransform(BlurTransformation(18, 3)))
+            .into(album_background_imd)
         Glide
             .with(this)
             .load(album.photoURL)

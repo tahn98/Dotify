@@ -1,5 +1,6 @@
 package com.vinova.dotify.view
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +16,8 @@ import com.vinova.dotify.adapter.MusicCollectionAdapter
 import com.vinova.dotify.adapter.YourAlbumAdapter
 import com.vinova.dotify.databinding.BrowseScreenBinding
 import com.vinova.dotify.model.MusicCollection
+import com.vinova.dotify.utils.BaseConst
+import com.vinova.dotify.utils.OnClickListener
 import com.vinova.dotify.viewmodel.FeedViewModel
 
 
@@ -28,8 +31,26 @@ class BrowseFragment : Fragment(){
                               savedInstanceState: Bundle?): View? {
         mViewModel = ViewModelProviders.of(this).get(FeedViewModel::class.java)
         playlistAdapter= MusicCollectionAdapter(context!!,1)
+        playlistAdapter?.setOnClick(object: OnClickListener{
+            override fun onClick(collection: MusicCollection) {
+                moveToDetail(collection)
+            }
+
+        })
         genreAdapter= MusicCollectionAdapter(context!!,2)
+        genreAdapter?.setOnClick(object: OnClickListener{
+            override fun onClick(collection: MusicCollection) {
+                moveToDetail(collection)
+            }
+
+        })
         albumAdapter=MusicCollectionAdapter(context!!,3)
+        albumAdapter?.setOnClick(object: OnClickListener{
+            override fun onClick(collection: MusicCollection) {
+                moveToDetail(collection)
+            }
+
+        })
         //Binding view with xml
         val binding = DataBindingUtil.inflate<BrowseScreenBinding>(inflater, R.layout.browse_screen, container, false)
         binding.pageIndicatorView.setViewPager(binding.viewPager)
@@ -64,5 +85,11 @@ class BrowseFragment : Fragment(){
             }
         }})
         return binding.root
+    }
+
+    private fun moveToDetail(collection: MusicCollection) {
+        var albumIntent = Intent(context, AlbumScreen::class.java)
+        albumIntent.putExtra(BaseConst.passMusicCollection, collection)
+        startActivity(albumIntent)
     }
 }
