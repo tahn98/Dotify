@@ -9,8 +9,8 @@ import com.vinova.dotify.repository.YourMusicRepository
 class YourMusicViewModel : ViewModel(){
     private var yourMusicModel = YourMusicRepository()
 
-    fun getAlbulm(uid : String) : MutableLiveData<MutableList<MusicCollection>>?{
-        return yourMusicModel?.getAlbulm(uid)
+    fun getAlbums(uid : String) : MutableLiveData<MutableList<MusicCollection>>?{
+        return yourMusicModel?.getAlbums(uid)
     }
 
     fun getListMusic(uid: String): MutableLiveData<MutableList<Music>>?{

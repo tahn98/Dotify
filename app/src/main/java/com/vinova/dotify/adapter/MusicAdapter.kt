@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.list_album_music_widget.view.*
 
 class MusicAdapter(private val context: Context,
                       private val listMusic : MutableList<Music>,
-                      private val clickListener : (Music) -> Unit) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+                      private val clickListener : (Music, Int) -> Unit) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
         val inflater = LayoutInflater.from(parent.context).inflate(R.layout.list_album_music_widget, parent, false)
@@ -30,12 +30,12 @@ class MusicAdapter(private val context: Context,
 
     inner class SongViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
 
-        fun bind(pos : String, music: Music, clickListener: (Music) -> Unit){
+        fun bind(pos : String, music: Music, clickListener: (Music, Int) -> Unit){
             itemView.music_name.text = music.name
             itemView.music_artist.text = music.artist
             itemView.music_number.text = pos
 
-            itemView.setOnClickListener { clickListener(music) }
+            itemView.setOnClickListener { clickListener(music, pos.toInt()) }
         }
     }
 }

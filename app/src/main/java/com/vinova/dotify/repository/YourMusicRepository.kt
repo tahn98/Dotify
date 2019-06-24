@@ -6,14 +6,14 @@ import com.vinova.dotify.model.Music
 import com.vinova.dotify.model.MusicCollection
 
 class YourMusicRepository{
-    fun getAlbulm(UID : String) : MutableLiveData<MutableList<MusicCollection>>? {
+    fun getAlbums(UID : String) : MutableLiveData<MutableList<MusicCollection>>? {
         var listAlbums : MutableLiveData<MutableList<MusicCollection>> = MutableLiveData()
         listAlbums.value = null
         var mData : DatabaseReference = FirebaseDatabase.getInstance().reference
 
         mData.child("users")
             .child(UID)
-            .child("listAlbulms")
+            .child("listAlbums")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
                     throw p0.toException()
