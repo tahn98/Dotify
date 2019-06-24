@@ -11,7 +11,8 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vinova.dotify.R
 import com.vinova.dotify.adapter.CustomPagerAdapter
-import com.vinova.dotify.adapter.SuggestedPlaylistAdapter
+import com.vinova.dotify.adapter.MusicCollectionAdapter
+import com.vinova.dotify.adapter.YourAlbumAdapter
 import com.vinova.dotify.databinding.BrowseScreenBinding
 import com.vinova.dotify.model.MusicCollection
 import com.vinova.dotify.viewmodel.FeedViewModel
@@ -19,14 +20,16 @@ import com.vinova.dotify.viewmodel.FeedViewModel
 
 class BrowseFragment : Fragment(){
     private var mViewModel: FeedViewModel? = null
-    private var myAdapter: SuggestedPlaylistAdapter?=null
-    private var mLayoutManager: LinearLayoutManager? = null
+    private var playlistAdapter: MusicCollectionAdapter?=null
+    private var genreAdapter: MusicCollectionAdapter?=null
+    private var albumAdapter: MusicCollectionAdapter?=null
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         mViewModel = ViewModelProviders.of(this).get(FeedViewModel::class.java)
-        myAdapter= SuggestedPlaylistAdapter(context!!)
-        mLayoutManager = LinearLayoutManager(context!!,LinearLayoutManager.HORIZONTAL, false)
+        playlistAdapter= MusicCollectionAdapter(context!!,1)
+        genreAdapter= MusicCollectionAdapter(context!!,2)
+        albumAdapter=MusicCollectionAdapter(context!!,3)
         //Binding view with xml
         val binding = DataBindingUtil.inflate<BrowseScreenBinding>(inflater, R.layout.browse_screen, container, false)
         binding.pageIndicatorView.setViewPager(binding.viewPager)
@@ -36,12 +39,28 @@ class BrowseFragment : Fragment(){
                 binding.viewPager.adapter= CustomPagerAdapter(context!!,data.listMusic?.values!!.toList())
             }
         }})
-        binding.rcvPlaylist.adapter= myAdapter
-        binding.rcvPlaylist.layoutManager= mLayoutManager
+        binding.rcvPlaylist.adapter= playlistAdapter
+        binding.rcvPlaylist.layoutManager= LinearLayoutManager(context!!,LinearLayoutManager.HORIZONTAL, false)
         mViewModel?.getSuggested()?.observe(this, Observer<List<MusicCollection>>{ data->run{
             if(data!=null)
             {
-                myAdapter?.addAll(data)
+                playlistAdapter?.addAll(data)
+            }
+        }})
+        binding.rcvAlbum.adapter= albumAdapter
+        binding.rcvAlbum.layoutManager= LinearLayoutManager(context!!)
+        mViewModel?.getAlbum()?.observe(this, Observer<List<MusicCollection>>{ data->run{
+            if(data!=null)
+            {
+                albumAdapter?.addAll(data)
+            }
+        }})
+        binding.rcvGenre.adapter= genreAdapter
+        binding.rcvGenre.layoutManager=  LinearLayoutManager(context!!,LinearLayoutManager.HORIZONTAL, false)
+        mViewModel?.getGenre()?.observe(this, Observer<List<MusicCollection>>{ data->run{
+            if(data!=null)
+            {
+                genreAdapter?.addAll(data)
             }
         }})
         return binding.root
