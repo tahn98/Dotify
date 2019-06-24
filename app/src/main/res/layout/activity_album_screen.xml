@@ -18,11 +18,12 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/type"
         android:layout_marginTop="15dp"
         android:fontFamily="@font/avenirnext"
         android:text="Album"
         android:textColor="@android:color/white"
-        android:textSize="15sp"
+        android:textSize="10sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -45,8 +46,7 @@
         android:fontFamily="@font/avenirnext"
         android:text="Rolling In The Deep"
         android:textColor="@android:color/white"
-        android:textSize="20sp"
-        android:textStyle="bold"
+        android:textSize="22sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -64,18 +64,40 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/play_button"
         android:layout_marginTop="240dp"
         android:src="@drawable/img_play"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@id/album_background_imd" />
 
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/like_button"
+        android:layout_marginTop="245dp"
+        android:src="@drawable/heart_song_btn"
+        android:layout_marginLeft="60dp"
+        app:layout_constraintRight_toLeftOf="@id/play_button"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@id/album_background_imd" />
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/share_button"
+        android:layout_marginTop="245dp"
+        android:src="@drawable/share_music_btn"
+        android:layout_marginRight="60dp"
+        app:layout_constraintLeft_toRightOf="@id/play_button"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/album_background_imd" />
     <TextView
         android:id="@+id/text_track"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="30dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="35dp"
         android:fontFamily="@font/avenirnext"
         android:text="TRACK LIST"
         app:layout_constraintStart_toStartOf="parent"

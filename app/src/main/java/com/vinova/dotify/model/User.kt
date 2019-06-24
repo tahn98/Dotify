@@ -3,7 +3,7 @@ package com.vinova.dotify.model
 import java.io.Serializable
 
 class User :Serializable {
-    var UID: String=""
+    var uid: String=""
     var email: String=""
     var username: String=""
     var gender: String=""

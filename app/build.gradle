@@ -67,5 +67,8 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
     implementation 'jp.wasabeef:glide-transformations:4.0.1'
 
+    //loading progressbar
+    implementation 'com.kaopiz:kprogresshud:1.2.0'
+
 }
 apply plugin: 'com.google.gms.google-services'
