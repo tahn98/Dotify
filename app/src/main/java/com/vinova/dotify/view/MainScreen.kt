@@ -43,6 +43,18 @@ class MainScreen : AppCompatActivity() {
 
         btn_play.setImageResource(R.drawable.pause_btn)
 
+        song_play.setOnClickListener {
+
+        }
+
+        song_forward.setOnClickListener {
+
+        }
+
+        song_rewind.setOnClickListener {
+
+        }
+
         repeat_btn.setOnClickListener {
             repeatEvent()
         }

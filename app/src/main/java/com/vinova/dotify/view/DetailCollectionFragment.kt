@@ -110,10 +110,6 @@ class DetailCollectionFragment : Fragment() {
         return binding.root
     }
     private fun itemClicked(music: Music, pos: Int?) {
-//        var musicIntent = Intent(context, PlayScreen::class.java)
-//        musicIntent.putExtra(BaseConst.passlistmusicobject, listMusic as Serializable)
-//        musicIntent.putExtra(BaseConst.passmusicobject, pos!! - 1)
-//        startActivity(musicIntent)
         (activity as MainScreen).play(pos!! - 1, listMusic)
     }
     private fun setupToolBar() {

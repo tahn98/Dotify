@@ -1,6 +1,5 @@
 package com.vinova.dotify.view
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -59,14 +58,20 @@ class AlbumFragment : Fragment(){
     }
 
     private fun itemClicked(album: MusicCollection){
-        gotoAlbumScreen(album)
+        gotoAlbumScreen(album, "ALBUM")
     }
 
-    fun gotoAlbumScreen(album: MusicCollection){
-        var albumIntent  = Intent(context, AlbumScreen::class.java)
-        albumIntent.putExtra(BaseConst.passMusicCollection, album)
-        albumIntent.putExtra("Type", "ALBUM")
+    private fun gotoAlbumScreen(collection: MusicCollection, type: String) {
 
-        startActivity(albumIntent)
+        val destFragment = DetailCollectionFragment()
+        val bundle = Bundle()
+        bundle.putSerializable(BaseConst.passMusicCollection, collection)
+        bundle.putString("Type", type)
+        destFragment.arguments = bundle
+        fragmentManager!!.beginTransaction()
+            .addToBackStack("xyz")
+            .hide(this@AlbumFragment)
+            .add(R.id.feature_container, destFragment)
+            .commit()
     }
 }
