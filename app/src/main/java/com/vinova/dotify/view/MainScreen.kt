@@ -20,6 +20,9 @@ import com.vinova.dotify.model.Music
 import com.vinova.dotify.viewmodel.UserViewModel
 import jp.wasabeef.glide.transformations.BlurTransformation
 import kotlinx.android.synthetic.main.activity_browse_screen.*
+import android.view.animation.Animation
+import android.view.animation.Animation.AnimationListener
+import android.view.animation.AnimationUtils
 
 
 class MainScreen : AppCompatActivity() {
@@ -35,6 +38,7 @@ class MainScreen : AppCompatActivity() {
     private var random: Boolean = false
     private var mViewModel: UserViewModel? = null
     private var action = false
+    private var panelState=false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,10 +52,12 @@ class MainScreen : AppCompatActivity() {
         song_play.setOnClickListener {
             if (!mediaPlayer?.isPlaying!!) {
                 song_play.setImageResource(R.drawable.pause_btn)
+                btn_play.setImageResource(R.drawable.pause_btn)
                 mediaPlayer?.start()
 
             } else {
                 song_play.setImageResource(R.drawable.play_btn)
+                btn_play.setImageResource(R.drawable.play_btn)
                 mediaPlayer?.pause()
             }
         }
@@ -112,13 +118,46 @@ class MainScreen : AppCompatActivity() {
                 previousState: SlidingUpPanelLayout.PanelState?,
                 newState: SlidingUpPanelLayout.PanelState?
             ) {
-                if (newState == SlidingUpPanelLayout.PanelState.EXPANDED) {
+                if (newState == SlidingUpPanelLayout.PanelState.DRAGGING && !panelState) {
+                    val fadeInAnimation = AnimationUtils.loadAnimation(
+                        this@MainScreen, R.anim.fade_in
+                    )
+                    fadeInAnimation.setAnimationListener(object : AnimationListener {
+
+                        override fun onAnimationStart(animation: Animation) {
+                            container.visibility = View.VISIBLE
+                        }
+                        override fun onAnimationRepeat(animation: Animation) {
+                        }
+                        override fun onAnimationEnd(animation: Animation) {
+                        }
+                    })
+                    container.startAnimation(fadeInAnimation)
                     bottom_sheet.visibility = View.INVISIBLE
-                    container.visibility = View.VISIBLE
+                }
+                if (newState == SlidingUpPanelLayout.PanelState.DRAGGING && panelState) {
+                    container.visibility=View.INVISIBLE
+                    bottom_sheet.visibility = View.VISIBLE
+                    val fadeInAnimation = AnimationUtils.loadAnimation(
+                        this@MainScreen, R.anim.fade_in
+                    )
+                    fadeInAnimation.setAnimationListener(object : AnimationListener {
+
+                        override fun onAnimationStart(animation: Animation) {
+                            bottom_sheet.visibility = View.VISIBLE
+                        }
+                        override fun onAnimationRepeat(animation: Animation) {
+                        }
+                        override fun onAnimationEnd(animation: Animation) {
+                        }
+                    })
+                    bottom_sheet.startAnimation(fadeInAnimation)
+                }
+                if (newState == SlidingUpPanelLayout.PanelState.EXPANDED) {
+                    panelState=true
                 }
                 if (newState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
-                    bottom_sheet.visibility = View.VISIBLE
-                    container.visibility = View.INVISIBLE
+                    panelState=false
                 }
             }
 
@@ -157,7 +196,7 @@ class MainScreen : AppCompatActivity() {
         supportActionBar?.hide()
     }
 
-    fun showToolbar() {
+    private fun showToolbar() {
         supportActionBar?.show()
     }
 
@@ -288,10 +327,12 @@ class MainScreen : AppCompatActivity() {
     private fun playListener() {
         if (!mediaPlayer?.isPlaying!!) {
             btn_play.setImageResource(R.drawable.pause_btn)
+            song_play.setImageResource(R.drawable.pause_btn)
             mediaPlayer?.start()
 
         } else {
             btn_play.setImageResource(R.drawable.play_btn)
+            song_play.setImageResource(R.drawable.play_btn)
             mediaPlayer?.pause()
         }
     }
@@ -380,15 +421,16 @@ class MainScreen : AppCompatActivity() {
         }
     }
 
-    fun collapseSlidingPanel() {
+    private fun collapseSlidingPanel() {
         sliding_layout.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
     }
 
-    fun checkSlidingUpPanel(): Boolean {
+    private fun checkSlidingUpPanel(): Boolean {
         return sliding_layout.panelState == SlidingUpPanelLayout.PanelState.EXPANDED
     }
 
     override fun onBackPressed() {
+        if(supportFragmentManager.backStackEntryCount == 1) this.showToolbar()
         if (checkSlidingUpPanel()) collapseSlidingPanel()
         else super.onBackPressed()
     }
