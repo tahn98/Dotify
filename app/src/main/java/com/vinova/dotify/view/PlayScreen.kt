@@ -1,10 +1,9 @@
 package com.vinova.dotify.view
 
-import android.content.res.ColorStateList
-import android.graphics.BlendMode
-import android.graphics.BlendModeColorFilter
-import android.graphics.Color
-import android.graphics.PorterDuff
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
@@ -13,14 +12,20 @@ import android.widget.SeekBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.bumptech.glide.request.RequestOptions.bitmapTransform
+import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
 import com.vinova.dotify.R
 import com.vinova.dotify.model.Music
 import com.vinova.dotify.utils.BaseConst
+import com.vinova.dotify.utils.HeadsetPlugReceiver
 import jp.wasabeef.glide.transformations.BlurTransformation
 import kotlinx.android.synthetic.main.activity_play_screen.*
 
+
 class PlayScreen : AppCompatActivity() {
+
     companion object{
         var mediaPlayer : MediaPlayer? = null
     }
@@ -30,6 +35,9 @@ class PlayScreen : AppCompatActivity() {
     private var position : Int = 0
     private var repeat : Boolean = false
     private var random : Boolean = false
+    private var headsetPlugReceiver :HeadsetPlugReceiver?=  null
+    private var updateUIReceiver: BroadcastReceiver? = null
+    private var state:String?="unknow"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +49,18 @@ class PlayScreen : AppCompatActivity() {
 //
 //            StrictMode.setThreadPolicy(policy)
 //        }
+        headsetPlugReceiver= HeadsetPlugReceiver()
+        var intentFilter = IntentFilter()
+        intentFilter.addAction("android.intent.action.HEADSET_PLUG")
+        registerReceiver(headsetPlugReceiver, intentFilter)
+        registerReceiver(updateUIReceiver, IntentFilter("broadCastName"))
+//        if (android.os.Build.VERSION.SDK_INT > 9) {
+//            val policy: StrictMode.ThreadPolicy =
+//                StrictMode.ThreadPolicy.Builder().permitAll().build()
+//
+//            StrictMode.setThreadPolicy(policy)
+//        }
+
 
         listMusic = intent.extras?.get(BaseConst.passlistmusicobject) as MutableList<Music>?
 
@@ -54,10 +74,6 @@ class PlayScreen : AppCompatActivity() {
         initMediaPlayer(position!!)
 
         btn_play.setImageResource(R.drawable.pause_btn)
-//        seekbar_music.progressDrawable.setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN)
-//        seekbar_music.thumb.setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN)
-//        seekbar_music.progressDrawable.colorFilter = BlendModeColorFilter(Color.RED, BlendMode.SRC_IN)
-//        seekbar_music.thumb.colorFilter = BlendModeColorFilter(Color.RED, BlendMode.SRC_IN)
 
         repeat_btn.setOnClickListener {
             repeatEvent()
@@ -169,6 +185,54 @@ class PlayScreen : AppCompatActivity() {
             repeat = false
             Toast.makeText(this, "Repeat Off", Toast.LENGTH_SHORT).show()
         }
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        if (headsetPlugReceiver != null) {
+            unregisterReceiver(headsetPlugReceiver)
+            headsetPlugReceiver = null
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        this.unregisterReceiver(this.updateUIReceiver)
+    }
+    override fun onResume() {
+        super.onResume()
+        val intentFilter = IntentFilter(
+            "android.intent.action.MAIN"
+        )
+
+        updateUIReceiver = object : BroadcastReceiver() {
+
+            override fun onReceive(context: Context, intent: Intent) {
+                //extract our message from intent
+                state = intent.getStringExtra("state")
+                if(state=="true")
+                {
+                    val factory = DrawableCrossFadeFactory.Builder().setCrossFadeEnabled(true).build()
+
+                    Glide.with(context)
+                        .load(R.drawable.headphone)
+                        .transition(withCrossFade(factory))
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(type_speaker)
+                }
+                else{
+                    val factory = DrawableCrossFadeFactory.Builder().setCrossFadeEnabled(true).build()
+
+                    Glide.with(context)
+                        .load(R.drawable.internal_speaker)
+                        .transition(withCrossFade(factory))
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(type_speaker)
+                }
+
+            }
+        }
+        //registering our receiver
+        this.registerReceiver(updateUIReceiver, intentFilter)
     }
 
     private fun setView(positon : Int){
