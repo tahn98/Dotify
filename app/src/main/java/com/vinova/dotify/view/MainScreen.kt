@@ -1,11 +1,17 @@
 package com.vinova.dotify.view
 
+import android.content.Context
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import com.vinova.dotify.R
 import kotlinx.android.synthetic.main.activity_browse_screen.*
+import com.sothree.slidinguppanel.SlidingUpPanelLayout
+
+
+
 
 
 class MainScreen : AppCompatActivity() {
@@ -32,6 +38,30 @@ class MainScreen : AppCompatActivity() {
             true
         }
         goToBrowseFragment()
+
+        sliding_layout.addPanelSlideListener(object : SlidingUpPanelLayout.PanelSlideListener {
+            override fun onPanelSlide(panel: View?, slideOffset: Float) {
+
+            }
+
+            override fun onPanelStateChanged(
+                panel: View?,
+                previousState: SlidingUpPanelLayout.PanelState?,
+                newState: SlidingUpPanelLayout.PanelState?
+            ) {
+                if(newState== SlidingUpPanelLayout.PanelState.EXPANDED)
+                {
+                    bottom_sheet.visibility=View.INVISIBLE
+                    container.visibility= View.VISIBLE
+                }
+                if(newState== SlidingUpPanelLayout.PanelState.COLLAPSED)
+                {
+                    bottom_sheet.visibility=View.VISIBLE
+                    container.visibility= View.INVISIBLE
+                }
+            }
+
+        })
     }
 
     private fun setupToolBar(){
@@ -59,6 +89,13 @@ class MainScreen : AppCompatActivity() {
     private fun goToBrowseFragment(){
         supportFragmentManager.beginTransaction().replace(R.id.feature_container, BrowseFragment())
             .commit()
+    }
+
+    fun hideToolbar() {
+       supportActionBar?.hide()
+    }
+    fun showToolbar() {
+        supportActionBar?.show()
     }
 
 
