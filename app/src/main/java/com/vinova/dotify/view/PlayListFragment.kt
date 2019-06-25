@@ -15,6 +15,6 @@ class PlayListFragment : Fragment(){
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.artist_fragment, container, false)
+        return inflater.inflate(R.layout.playlist_fragment, container, false)
     }
 }

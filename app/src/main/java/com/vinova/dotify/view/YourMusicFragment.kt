@@ -48,7 +48,7 @@ class YourMusicFragment : Fragment() {
         playlists_btn.setOnClickListener {
             resetSelectedImage()
             playlists_btn.setImageResource(R.drawable.ic_playlists_btn_selected)
-            fragmentManager?.beginTransaction()?.replace(R.id.tab_container, ArtistFragment.newInstance(), null)
+            fragmentManager?.beginTransaction()?.replace(R.id.tab_container, PlayListFragment.newInstance(), null)
                 ?.commit()
         }
     }

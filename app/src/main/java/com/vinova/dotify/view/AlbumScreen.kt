@@ -45,6 +45,7 @@ class AlbumScreen : AppCompatActivity() {
     }
 
     private fun getBackAlbum(){
+
         album = intent.extras?.get(BaseConst.passMusicCollection) as MusicCollection
         listMusic = album.listMusic?.values?.toList() as MutableList<Music>
     }
