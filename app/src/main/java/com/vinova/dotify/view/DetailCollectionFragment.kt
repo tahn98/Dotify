@@ -92,6 +92,9 @@ class DetailCollectionFragment : Fragment() {
             startActivity(Intent.createChooser(share, "Share link"))
         }
         binding.listMusicContainer.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+        binding.playButton.setOnClickListener {
+            (activity as MainScreen).play(0, listMusic)
+        }
         musicAdapter = MusicAdapter(context!!, listMusic){
                 music : Music, pos : Int -> itemClicked(music, pos)
         }
@@ -107,10 +110,11 @@ class DetailCollectionFragment : Fragment() {
         return binding.root
     }
     private fun itemClicked(music: Music, pos: Int?) {
-        var musicIntent = Intent(context, PlayScreen::class.java)
-        musicIntent.putExtra(BaseConst.passlistmusicobject, listMusic as Serializable)
-        musicIntent.putExtra(BaseConst.passmusicobject, pos!! - 1)
-        startActivity(musicIntent)
+//        var musicIntent = Intent(context, PlayScreen::class.java)
+//        musicIntent.putExtra(BaseConst.passlistmusicobject, listMusic as Serializable)
+//        musicIntent.putExtra(BaseConst.passmusicobject, pos!! - 1)
+//        startActivity(musicIntent)
+        (activity as MainScreen).play(pos!! - 1, listMusic)
     }
     private fun setupToolBar() {
         (activity as MainScreen).hideToolbar()
