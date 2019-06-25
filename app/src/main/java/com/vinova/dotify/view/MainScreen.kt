@@ -3,23 +3,23 @@ package com.vinova.dotify.view
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import com.vinova.dotify.R
 import com.vinova.dotify.model.Music
+import com.vinova.dotify.viewmodel.UserViewModel
+import jp.wasabeef.glide.transformations.BlurTransformation
 import kotlinx.android.synthetic.main.activity_browse_screen.*
-import kotlinx.android.synthetic.main.activity_browse_screen.btn_play
-import kotlinx.android.synthetic.main.activity_browse_screen.forward_btn
-import kotlinx.android.synthetic.main.activity_browse_screen.repeat_btn
-import kotlinx.android.synthetic.main.activity_browse_screen.rewind_btn
-import kotlinx.android.synthetic.main.activity_browse_screen.seekbar_music
-import kotlinx.android.synthetic.main.activity_browse_screen.shuffle_btn
-import kotlinx.android.synthetic.main.activity_play_screen.*
 
 
 class MainScreen : AppCompatActivity() {
@@ -33,18 +33,27 @@ class MainScreen : AppCompatActivity() {
     private var position : Int = 0
     private var repeat : Boolean = false
     private var random : Boolean = false
+    private var mViewModel: UserViewModel? = null
+    private var action=false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_browse_screen)
-
-
+        mViewModel = ViewModelProviders.of(this).get(UserViewModel::class.java)
         setupToolBar()
 
         btn_play.setImageResource(R.drawable.pause_btn)
+        song_play.setImageResource(R.drawable.pause_btn)
 
         song_play.setOnClickListener {
+            if (!mediaPlayer?.isPlaying!!) {
+                song_play.setImageResource(R.drawable.pause_btn)
+                mediaPlayer?.start()
 
+            } else {
+                song_play.setImageResource(R.drawable.play_btn)
+                mediaPlayer?.pause()
+            }
         }
 
         song_forward.setOnClickListener {
@@ -116,11 +125,12 @@ class MainScreen : AppCompatActivity() {
             }
 
         })
+        sliding_layout.panelState= SlidingUpPanelLayout.PanelState.HIDDEN
     }
 
     private fun setupToolBar(){
         setSupportActionBar(main_toolbar)
-        var actionBar = supportActionBar
+        val actionBar = supportActionBar
         actionBar?.setDisplayHomeAsUpEnabled(true)
         actionBar?.setHomeAsUpIndicator(R.drawable.nav_ic)
     }
@@ -153,21 +163,21 @@ class MainScreen : AppCompatActivity() {
     }
 
     private fun initMediaPlayer(position : Int){
-        if(PlayScreen.mediaPlayer == null){
-            PlayScreen.mediaPlayer = MediaPlayer()
+        if(mediaPlayer == null){
+            mediaPlayer = MediaPlayer()
         }
         else{
-            PlayScreen.mediaPlayer?.reset()
+            mediaPlayer?.reset()
         }
 
 
-        PlayScreen.mediaPlayer?.setDataSource(listMusic?.get(position)?.musicURL)
-        PlayScreen.mediaPlayer?.prepare()
+        mediaPlayer?.setDataSource(listMusic?.get(position)?.musicURL)
+        mediaPlayer?.prepare()
 
-        seekbar_music.max = PlayScreen.mediaPlayer?.duration!!
+        seekbar_music.max = mediaPlayer?.duration!!
         updateTime()
 
-        PlayScreen.mediaPlayer?.start()
+        mediaPlayer?.start()
 
         seekbar_music.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
@@ -179,29 +189,74 @@ class MainScreen : AppCompatActivity() {
             }
 
             override fun onStopTrackingTouch(p0: SeekBar?) {
-                PlayScreen.mediaPlayer?.seekTo(p0!!.progress)
+                mediaPlayer?.seekTo(p0!!.progress)
             }
 
         })
     }
 
     fun play(position: Int, listMusic : MutableList<Music>){
+        setPlayerView(listMusic, position)
+        sliding_layout.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
         this.listMusic = listMusic
         this.position = position
-        sliding_layout.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
-        initMediaPlayer(position!!)
+        initMediaPlayer(position)
+    }
+
+    private fun setPlayerView(
+        listMusic: MutableList<Music>,
+        position: Int
+    ) {
+        mViewModel?.isLike("HkWQty0QRTh9eEaBdCngJQuU1uf2", listMusic[position])
+            ?.observe(this, Observer<Boolean> { data ->
+                run {
+                    action = if (data) {
+                        favorite_btn.setImageResource(R.drawable.favorited_song_btn)
+                        false
+                    } else {
+                        favorite_btn.setImageResource(R.drawable.favorite_song_btn)
+                        true
+                    }
+                }
+            })
+        favorite_btn.setOnClickListener {
+            action = if (action) {
+                favorite_btn.setImageResource(R.drawable.favorited_song_btn)
+                false
+            } else {
+                favorite_btn.setImageResource(R.drawable.favorite_song_btn)
+                true
+            }
+            mViewModel?.likeMusic("HkWQty0QRTh9eEaBdCngJQuU1uf2", listMusic[position], action)
+
+        }
+        Glide
+            .with(this)
+            .load(listMusic[position].posterURL)
+            .thumbnail(0.001f)
+            .into(song_img)
+        Glide
+            .with(this)
+            .load(listMusic[position].posterURL)
+            .thumbnail(0.001f)
+            .apply(RequestOptions.bitmapTransform(BlurTransformation(18, 3)))
+            .into(cards_brands)
+        song_name.text = listMusic[position].name
+        song_artist.text = listMusic[position].artist
+        music_artist_name.text = listMusic[position].name
+        music_play_name.text = listMusic[position].artist
     }
 
     private fun updateTime(){
         val handler = Handler()
         handler.postDelayed(object : Runnable{
             override fun run() {
-                if (PlayScreen.mediaPlayer != null) {
-                    seekbar_music.progress = PlayScreen.mediaPlayer!!.currentPosition
+                if (mediaPlayer != null) {
+                    seekbar_music.progress = mediaPlayer!!.currentPosition
                     handler.postDelayed(this, 400)
-                    PlayScreen.mediaPlayer?.setOnCompletionListener {
+                    mediaPlayer?.setOnCompletionListener {
                         next = true
-                        Thread.sleep(1000)
+                        Thread.sleep(200)
                     }
                 }
             }
@@ -223,22 +278,23 @@ class MainScreen : AppCompatActivity() {
     }
 
     private fun playListener() {
-        if (!PlayScreen.mediaPlayer?.isPlaying!!) {
+        if (!mediaPlayer?.isPlaying!!) {
             btn_play.setImageResource(R.drawable.pause_btn)
-            PlayScreen.mediaPlayer?.start()
+            mediaPlayer?.start()
 
         } else {
             btn_play.setImageResource(R.drawable.play_btn)
-            PlayScreen.mediaPlayer?.pause()
+            mediaPlayer?.pause()
         }
     }
 
     private fun rewindListener() {
+        btn_play.setImageResource(R.drawable.pause_btn)
         if (listMusic!!.size > 0) {
-            if (PlayScreen.mediaPlayer?.isPlaying!! && PlayScreen.mediaPlayer != null) {
-                PlayScreen.mediaPlayer!!.stop()
-                PlayScreen.mediaPlayer!!.release()
-                PlayScreen.mediaPlayer = null
+            if (mediaPlayer?.isPlaying!! && mediaPlayer != null) {
+                mediaPlayer!!.stop()
+                mediaPlayer!!.release()
+                mediaPlayer = null
             }
             if (position < listMusic!!.size - 1 && position > 0) {
                 position--
@@ -253,15 +309,17 @@ class MainScreen : AppCompatActivity() {
                 position = listMusic!!.size - 1
             }
             initMediaPlayer(position)
+            setPlayerView(listMusic!!, position)
         }
     }
 
     private fun forwardListener() {
+        btn_play.setImageResource(R.drawable.pause_btn)
         if (listMusic!!.size > 1) {
-            if (PlayScreen.mediaPlayer?.isPlaying!! && PlayScreen.mediaPlayer != null) {
-                PlayScreen.mediaPlayer!!.stop()
-                PlayScreen.mediaPlayer!!.release()
-                PlayScreen.mediaPlayer = null
+            if (mediaPlayer?.isPlaying!! && mediaPlayer != null) {
+                mediaPlayer!!.stop()
+                mediaPlayer!!.release()
+                mediaPlayer = null
             }
             if (position < listMusic!!.size) {
                 position++
@@ -276,6 +334,7 @@ class MainScreen : AppCompatActivity() {
                 position = 0
             }
             initMediaPlayer(position)
+            setPlayerView(listMusic!!, position)
         }
     }
 

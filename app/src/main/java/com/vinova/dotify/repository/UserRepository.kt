@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.vinova.dotify.model.Music
 import com.vinova.dotify.model.MusicCollection
 import com.vinova.dotify.model.User
 
@@ -128,5 +129,34 @@ class UserRepository {
             ref.child(collection.id!!).setValue(collection)
         }
 
+    }
+
+    fun likeMusic(UID: String, music: Music, action: Boolean) {
+        val mDatabase: DatabaseReference = FirebaseDatabase.getInstance().reference
+        var ref = mDatabase.child("users").child(UID).child("listMusics")
+        if (action) {
+            ref.child(music.id!!).removeValue()
+        } else {
+            ref.child(music.id!!).setValue(music)
+        }
+
+    }
+
+    fun isLike(UID: String, music: Music): MutableLiveData<Boolean> {
+        val res = MutableLiveData<Boolean>()
+        val mDatabase: DatabaseReference = FirebaseDatabase.getInstance().reference
+        var ref = mDatabase.child("users").child(UID)
+
+        var query = ref.child("listMusics").orderByKey().equalTo(music.id)
+        query.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                res.value = dataSnapshot.exists()
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+        })
+        return res
     }
 }
