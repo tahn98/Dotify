@@ -3,6 +3,7 @@ package com.vinova.dotify.view
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.SeekBar
@@ -42,6 +43,26 @@ class MainScreen : AppCompatActivity() {
         setupToolBar()
 
         btn_play.setImageResource(R.drawable.pause_btn)
+        song_play.setImageResource(R.drawable.pause_btn)
+
+        song_play.setOnClickListener {
+            if (!mediaPlayer?.isPlaying!!) {
+                song_play.setImageResource(R.drawable.pause_btn)
+                mediaPlayer?.start()
+
+            } else {
+                song_play.setImageResource(R.drawable.play_btn)
+                mediaPlayer?.pause()
+            }
+        }
+
+        song_forward.setOnClickListener {
+
+        }
+
+        song_rewind.setOnClickListener {
+
+        }
 
         repeat_btn.setOnClickListener {
             repeatEvent()
@@ -140,21 +161,23 @@ class MainScreen : AppCompatActivity() {
         supportActionBar?.show()
     }
 
+
     private fun initMediaPlayer(position: Int) {
-        if (PlayScreen.mediaPlayer == null) {
-            PlayScreen.mediaPlayer = MediaPlayer()
+        if (mediaPlayer == null) {
+            mediaPlayer = MediaPlayer()
         } else {
-            PlayScreen.mediaPlayer?.reset()
+            mediaPlayer?.reset()
         }
 
 
-        PlayScreen.mediaPlayer?.setDataSource(listMusic.elementAt(position).musicURL)
-        PlayScreen.mediaPlayer?.prepare()
+        mediaPlayer?.setDataSource(listMusic.elementAt(position).musicURL)
+        mediaPlayer?.prepare()
 
-        seekbar_music.max = PlayScreen.mediaPlayer?.duration!!
+
+        seekbar_music.max = mediaPlayer?.duration!!
         updateTime()
 
-        PlayScreen.mediaPlayer?.start()
+        mediaPlayer?.start()
 
         seekbar_music.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
@@ -166,7 +189,7 @@ class MainScreen : AppCompatActivity() {
             }
 
             override fun onStopTrackingTouch(p0: SeekBar?) {
-                PlayScreen.mediaPlayer?.seekTo(p0!!.progress)
+                mediaPlayer?.seekTo(p0!!.progress)
             }
 
         })
@@ -236,12 +259,12 @@ class MainScreen : AppCompatActivity() {
         val handler = Handler()
         handler.postDelayed(object : Runnable {
             override fun run() {
-                if (PlayScreen.mediaPlayer != null) {
-                    seekbar_music.progress = PlayScreen.mediaPlayer!!.currentPosition
+                if (mediaPlayer != null) {
+                    seekbar_music.progress = mediaPlayer!!.currentPosition
                     handler.postDelayed(this, 400)
-                    PlayScreen.mediaPlayer?.setOnCompletionListener {
+                    mediaPlayer?.setOnCompletionListener {
                         next = true
-                        Thread.sleep(1000)
+                        Thread.sleep(200)
                     }
                 }
             }
@@ -263,22 +286,23 @@ class MainScreen : AppCompatActivity() {
     }
 
     private fun playListener() {
-        if (!PlayScreen.mediaPlayer?.isPlaying!!) {
+        if (!mediaPlayer?.isPlaying!!) {
             btn_play.setImageResource(R.drawable.pause_btn)
-            PlayScreen.mediaPlayer?.start()
+            mediaPlayer?.start()
 
         } else {
             btn_play.setImageResource(R.drawable.play_btn)
-            PlayScreen.mediaPlayer?.pause()
+            mediaPlayer?.pause()
         }
     }
 
     private fun rewindListener() {
+        btn_play.setImageResource(R.drawable.pause_btn)
         if (listMusic.isNotEmpty()) {
-            if (PlayScreen.mediaPlayer?.isPlaying!! && PlayScreen.mediaPlayer != null) {
-                PlayScreen.mediaPlayer!!.stop()
-                PlayScreen.mediaPlayer!!.release()
-                PlayScreen.mediaPlayer = null
+            if (mediaPlayer?.isPlaying!! && mediaPlayer != null) {
+                mediaPlayer!!.stop()
+                mediaPlayer!!.release()
+                mediaPlayer = null
             }
             if (position < listMusic.size - 1 && position > 0) {
                 position--
@@ -298,26 +322,27 @@ class MainScreen : AppCompatActivity() {
     }
 
     private fun forwardListener() {
-        if (listMusic!!.size > 1) {
-            if (PlayScreen.mediaPlayer?.isPlaying!! && PlayScreen.mediaPlayer != null) {
-                PlayScreen.mediaPlayer!!.stop()
-                PlayScreen.mediaPlayer!!.release()
-                PlayScreen.mediaPlayer = null
+        btn_play.setImageResource(R.drawable.pause_btn)
+        if (listMusic.size > 1) {
+            if (mediaPlayer?.isPlaying!! && mediaPlayer != null) {
+                mediaPlayer!!.stop()
+                mediaPlayer!!.release()
+                mediaPlayer = null
             }
-            if (position < listMusic!!.size) {
+            if (position < listMusic.size) {
                 position++
                 if (repeat) {
                     position--
                 }
                 if (random) {
-                    position = (0 until listMusic!!.size).random()
+                    position = (0 until listMusic.size).random()
                 }
             }
-            if (position > listMusic!!.size - 1) {
+            if (position > listMusic.size - 1) {
                 position = 0
             }
             initMediaPlayer(position)
-            setPlayerView(listMusic!!, position)
+            setPlayerView(listMusic, position)
         }
     }
 
@@ -354,15 +379,17 @@ class MainScreen : AppCompatActivity() {
             Toast.makeText(this, "Repeat Off", Toast.LENGTH_SHORT).show()
         }
     }
-    fun collapseSlidingPanel(){
+
+    fun collapseSlidingPanel() {
         sliding_layout.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
     }
+
     fun checkSlidingUpPanel(): Boolean {
         return sliding_layout.panelState == SlidingUpPanelLayout.PanelState.EXPANDED
     }
 
     override fun onBackPressed() {
-        if(checkSlidingUpPanel()) collapseSlidingPanel()
+        if (checkSlidingUpPanel()) collapseSlidingPanel()
         else super.onBackPressed()
     }
 }
