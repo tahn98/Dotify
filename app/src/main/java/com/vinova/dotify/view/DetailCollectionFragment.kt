@@ -46,7 +46,12 @@ class DetailCollectionFragment : Fragment() {
             listMusic = collection.listMusic?.values?.toList() as MutableList<Music>
         }
         mViewModel = ViewModelProviders.of(this).get(UserViewModel::class.java)
-        val binding = DataBindingUtil.inflate<FragmentDetailCollectionBinding>(inflater, R.layout.fragment_detail_collection, container, false)
+        val binding = DataBindingUtil.inflate<FragmentDetailCollectionBinding>(
+            inflater,
+            R.layout.fragment_detail_collection,
+            container,
+            false
+        )
         Glide
             .with(this)
             .load(collection.photoURL)
@@ -58,30 +63,31 @@ class DetailCollectionFragment : Fragment() {
             .load(collection.photoURL)
             .centerCrop()
             .into(binding.photoAlbumImg)
-        binding.type.text=type
+        binding.type.text = type
         binding.albumName.text = collection.name
-        var action=false
+        var action = false
 
-        mViewModel?.isLike("HkWQty0QRTh9eEaBdCngJQuU1uf2",collection,type!!)?.observe(this, Observer<Boolean> {data->
-            run {
-                action = if(data) {
-                    binding.likeButton.setImageResource(R.drawable.hearted_song_btn)
-                    false
-                } else {
-                    binding.likeButton.setImageResource(R.drawable.heart_song_btn)
-                    true
+        mViewModel?.isLike("HkWQty0QRTh9eEaBdCngJQuU1uf2", collection, type!!)
+            ?.observe(this, Observer<Boolean> { data ->
+                run {
+                    action = if (data) {
+                        binding.likeButton.setImageResource(R.drawable.hearted_song_btn)
+                        false
+                    } else {
+                        binding.likeButton.setImageResource(R.drawable.heart_song_btn)
+                        true
+                    }
                 }
-            }
-        })
-        binding.likeButton.setOnClickListener{
-            action = if(action) {
+            })
+        binding.likeButton.setOnClickListener {
+            action = if (action) {
                 binding.likeButton.setImageResource(R.drawable.hearted_song_btn)
                 false
             } else {
                 binding.likeButton.setImageResource(R.drawable.heart_song_btn)
                 true
             }
-            mViewModel?.likeCollection("HkWQty0QRTh9eEaBdCngJQuU1uf2",collection,type!!,action)
+            mViewModel?.likeCollection("HkWQty0QRTh9eEaBdCngJQuU1uf2", collection, type!!, action)
 
         }
         binding.shareButton.setOnClickListener {
@@ -95,23 +101,26 @@ class DetailCollectionFragment : Fragment() {
         binding.playButton.setOnClickListener {
             (activity as MainScreen).play(0, listMusic)
         }
-        musicAdapter = MusicAdapter(context!!, listMusic){
-                music : Music, pos : Int -> itemClicked(music, pos)
+        musicAdapter = MusicAdapter(context!!, listMusic) { music: Music, pos: Int ->
+            itemClicked(music, pos)
         }
 
         binding.listMusicContainer.adapter = musicAdapter
         musicAdapter.notifyDataSetChanged()
         binding.imgAlbumBack.setOnClickListener {
-            (activity as MainScreen).showToolbar()
-            activity?.onBackPressed()
-
+            if (!(activity as MainScreen).checkSlidingUpPanel()) {
+                (activity as MainScreen).showToolbar()
+            }
+            (activity as MainScreen).onBackPressed()
         }
         setupToolBar()
         return binding.root
     }
+
     private fun itemClicked(music: Music, pos: Int?) {
         (activity as MainScreen).play(pos!! - 1, listMusic)
     }
+
     private fun setupToolBar() {
         (activity as MainScreen).hideToolbar()
     }

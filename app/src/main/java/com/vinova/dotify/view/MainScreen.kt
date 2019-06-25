@@ -23,17 +23,17 @@ import kotlinx.android.synthetic.main.activity_browse_screen.*
 
 class MainScreen : AppCompatActivity() {
 
-    companion object{
-        var mediaPlayer : MediaPlayer? = null
+    companion object {
+        var mediaPlayer: MediaPlayer? = null
     }
 
-    private var listMusic : MutableList<Music>? = null
-    private var next : Boolean = true
-    private var position : Int = 0
-    private var repeat : Boolean = false
-    private var random : Boolean = false
+    private var listMusic: MutableCollection<Music> = ArrayList<Music>()
+    private var next: Boolean = true
+    private var position: Int = 0
+    private var repeat: Boolean = false
+    private var random: Boolean = false
     private var mViewModel: UserViewModel? = null
-    private var action=false
+    private var action = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,7 +64,7 @@ class MainScreen : AppCompatActivity() {
         }
 
         nav_view.setNavigationItemSelectedListener { p0 ->
-            when(p0.itemId){
+            when (p0.itemId) {
                 R.id.menu_brower -> {
                     p0.isChecked = true
                     goToBrowseFragment()
@@ -91,23 +91,21 @@ class MainScreen : AppCompatActivity() {
                 previousState: SlidingUpPanelLayout.PanelState?,
                 newState: SlidingUpPanelLayout.PanelState?
             ) {
-                if(newState== SlidingUpPanelLayout.PanelState.EXPANDED)
-                {
-                    bottom_sheet.visibility=View.INVISIBLE
-                    container.visibility= View.VISIBLE
+                if (newState == SlidingUpPanelLayout.PanelState.EXPANDED) {
+                    bottom_sheet.visibility = View.INVISIBLE
+                    container.visibility = View.VISIBLE
                 }
-                if(newState== SlidingUpPanelLayout.PanelState.COLLAPSED)
-                {
-                    bottom_sheet.visibility=View.VISIBLE
-                    container.visibility= View.INVISIBLE
+                if (newState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
+                    bottom_sheet.visibility = View.VISIBLE
+                    container.visibility = View.INVISIBLE
                 }
             }
 
         })
-        sliding_layout.panelState= SlidingUpPanelLayout.PanelState.HIDDEN
+        sliding_layout.panelState = SlidingUpPanelLayout.PanelState.HIDDEN
     }
 
-    private fun setupToolBar(){
+    private fun setupToolBar() {
         setSupportActionBar(main_toolbar)
         val actionBar = supportActionBar
         actionBar?.setDisplayHomeAsUpEnabled(true)
@@ -124,33 +122,33 @@ class MainScreen : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun goToYourMusicFragment(){
+    private fun goToYourMusicFragment() {
         supportFragmentManager.beginTransaction().replace(R.id.feature_container, YourMusicFragment())
             .commit()
     }
 
-    private fun goToBrowseFragment(){
+    private fun goToBrowseFragment() {
         supportFragmentManager.beginTransaction().replace(R.id.feature_container, BrowseFragment())
             .commit()
     }
 
     fun hideToolbar() {
-       supportActionBar?.hide()
+        supportActionBar?.hide()
     }
+
     fun showToolbar() {
         supportActionBar?.show()
     }
 
-    private fun initMediaPlayer(position : Int){
-        if(PlayScreen.mediaPlayer == null){
+    private fun initMediaPlayer(position: Int) {
+        if (PlayScreen.mediaPlayer == null) {
             PlayScreen.mediaPlayer = MediaPlayer()
-        }
-        else{
+        } else {
             PlayScreen.mediaPlayer?.reset()
         }
 
 
-        PlayScreen.mediaPlayer?.setDataSource(listMusic?.get(position)?.musicURL)
+        PlayScreen.mediaPlayer?.setDataSource(listMusic.elementAt(position).musicURL)
         PlayScreen.mediaPlayer?.prepare()
 
         seekbar_music.max = PlayScreen.mediaPlayer?.duration!!
@@ -158,7 +156,7 @@ class MainScreen : AppCompatActivity() {
 
         PlayScreen.mediaPlayer?.start()
 
-        seekbar_music.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
+        seekbar_music.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
 
             }
@@ -174,7 +172,7 @@ class MainScreen : AppCompatActivity() {
         })
     }
 
-    fun play(position: Int, listMusic : MutableList<Music>){
+    fun play(position: Int, listMusic: MutableList<Music>) {
         setPlayerView(listMusic, position)
         sliding_layout.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
         this.listMusic = listMusic
@@ -182,11 +180,19 @@ class MainScreen : AppCompatActivity() {
         initMediaPlayer(position)
     }
 
+    fun play(song: Music) {
+        this.listMusic.add(song)
+        this.position = listMusic.size - 1
+        setPlayerView(listMusic, position)
+        sliding_layout.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
+        initMediaPlayer(position)
+    }
+
     private fun setPlayerView(
-        listMusic: MutableList<Music>,
+        listMusic: MutableCollection<Music>,
         position: Int
     ) {
-        mViewModel?.isLike("HkWQty0QRTh9eEaBdCngJQuU1uf2", listMusic[position])
+        mViewModel?.isLike("HkWQty0QRTh9eEaBdCngJQuU1uf2", listMusic.elementAt(position))
             ?.observe(this, Observer<Boolean> { data ->
                 run {
                     action = if (data) {
@@ -206,29 +212,29 @@ class MainScreen : AppCompatActivity() {
                 favorite_btn.setImageResource(R.drawable.favorite_song_btn)
                 true
             }
-            mViewModel?.likeMusic("HkWQty0QRTh9eEaBdCngJQuU1uf2", listMusic[position], action)
+            mViewModel?.likeMusic("HkWQty0QRTh9eEaBdCngJQuU1uf2", listMusic.elementAt(position), action)
 
         }
         Glide
             .with(this)
-            .load(listMusic[position].posterURL)
+            .load(listMusic.elementAt(position).posterURL)
             .thumbnail(0.001f)
             .into(song_img)
         Glide
             .with(this)
-            .load(listMusic[position].posterURL)
+            .load(listMusic.elementAt(position).posterURL)
             .thumbnail(0.001f)
             .apply(RequestOptions.bitmapTransform(BlurTransformation(18, 3)))
             .into(cards_brands)
-        song_name.text = listMusic[position].name
-        song_artist.text = listMusic[position].artist
-        music_artist_name.text = listMusic[position].name
-        music_play_name.text = listMusic[position].artist
+        song_name.text = listMusic.elementAt(position).name
+        song_artist.text = listMusic.elementAt(position).artist
+        music_artist_name.text = listMusic.elementAt(position).name
+        music_play_name.text = listMusic.elementAt(position).artist
     }
 
-    private fun updateTime(){
+    private fun updateTime() {
         val handler = Handler()
-        handler.postDelayed(object : Runnable{
+        handler.postDelayed(object : Runnable {
             override fun run() {
                 if (PlayScreen.mediaPlayer != null) {
                     seekbar_music.progress = PlayScreen.mediaPlayer!!.currentPosition
@@ -239,21 +245,21 @@ class MainScreen : AppCompatActivity() {
                     }
                 }
             }
-        },400)
+        }, 400)
 
         val handlerNext = Handler()
-        handlerNext.postDelayed(object : Runnable{
+        handlerNext.postDelayed(object : Runnable {
             override fun run() {
-                if (next){
+                if (next) {
                     initMediaPlayer(position)
                     next = false
                     handlerNext.removeCallbacks(this)
-                }else{
+                } else {
                     handler.postDelayed(this, 1000)
                 }
             }
 
-        },1000)
+        }, 1000)
     }
 
     private fun playListener() {
@@ -268,26 +274,26 @@ class MainScreen : AppCompatActivity() {
     }
 
     private fun rewindListener() {
-        if (listMusic!!.size > 0) {
+        if (listMusic.isNotEmpty()) {
             if (PlayScreen.mediaPlayer?.isPlaying!! && PlayScreen.mediaPlayer != null) {
                 PlayScreen.mediaPlayer!!.stop()
                 PlayScreen.mediaPlayer!!.release()
                 PlayScreen.mediaPlayer = null
             }
-            if (position < listMusic!!.size - 1 && position > 0) {
+            if (position < listMusic.size - 1 && position > 0) {
                 position--
                 if (repeat) {
                     position++
                 }
                 if (random) {
-                    position = (0 until listMusic!!.size).random()
+                    position = (0 until listMusic.size).random()
                 }
             }
             if (position == 0) {
-                position = listMusic!!.size - 1
+                position = listMusic.size - 1
             }
             initMediaPlayer(position)
-            setPlayerView(listMusic!!, position)
+            setPlayerView(listMusic, position)
         }
     }
 
@@ -347,5 +353,16 @@ class MainScreen : AppCompatActivity() {
             repeat = false
             Toast.makeText(this, "Repeat Off", Toast.LENGTH_SHORT).show()
         }
+    }
+    fun collapseSlidingPanel(){
+        sliding_layout.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
+    }
+    fun checkSlidingUpPanel(): Boolean {
+        return sliding_layout.panelState == SlidingUpPanelLayout.PanelState.EXPANDED
+    }
+
+    override fun onBackPressed() {
+        if(checkSlidingUpPanel()) collapseSlidingPanel()
+        else super.onBackPressed()
     }
 }

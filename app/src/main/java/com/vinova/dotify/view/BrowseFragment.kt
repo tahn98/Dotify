@@ -15,9 +15,11 @@ import com.vinova.dotify.R
 import com.vinova.dotify.adapter.CustomPagerAdapter
 import com.vinova.dotify.adapter.MusicCollectionAdapter
 import com.vinova.dotify.databinding.BrowseScreenBinding
+import com.vinova.dotify.model.Music
 import com.vinova.dotify.model.MusicCollection
 import com.vinova.dotify.utils.BaseConst
 import com.vinova.dotify.utils.OnClickListener
+import com.vinova.dotify.utils.OnViewPagerItemClickListener
 import com.vinova.dotify.viewmodel.FeedViewModel
 
 
@@ -66,7 +68,14 @@ class BrowseFragment : Fragment() {
         mViewModel?.getLatest()?.observe(this, Observer<MusicCollection> { data ->
             run {
                 if (data != null) {
-                    binding.viewPager.adapter = CustomPagerAdapter(context!!, data.listMusic?.values!!.toList())
+                    val adapter=CustomPagerAdapter(context!!, data.listMusic?.values!!.toList())
+                    adapter.setOnClickListener(object:OnViewPagerItemClickListener{
+                        override fun onClick(song: Music) {
+                            (activity as MainScreen).play(song)
+                        }
+
+                    })
+                    binding.viewPager.adapter=adapter
                 }
             }
         })
