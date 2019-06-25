@@ -3,6 +3,7 @@ package com.vinova.dotify.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.AuthCredential
+import com.vinova.dotify.model.Music
 import com.vinova.dotify.model.MusicCollection
 import com.vinova.dotify.model.User
 import com.vinova.dotify.repository.UserRepository
@@ -38,7 +39,15 @@ class UserViewModel :ViewModel() {
     fun isLike(UID:String,collection:MusicCollection,type:String): MutableLiveData<Boolean> {
         return userModel.isLike(UID,collection,type)
     }
+
+    fun isLike(UID:String,collection: Music): MutableLiveData<Boolean> {
+        return userModel.isLike(UID,collection)
+    }
     fun likeCollection(UID:String,collection:MusicCollection,type:String,action:Boolean){
         userModel.likeCollection(UID,collection,type,action)
+    }
+
+    fun likeMusic(UID:String,music:Music,action:Boolean){
+        userModel.likeMusic(UID,music,action)
     }
 }

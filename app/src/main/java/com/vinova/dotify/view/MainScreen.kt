@@ -9,17 +9,16 @@ import android.widget.SeekBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import com.vinova.dotify.R
 import com.vinova.dotify.model.Music
+import com.vinova.dotify.viewmodel.UserViewModel
+import jp.wasabeef.glide.transformations.BlurTransformation
 import kotlinx.android.synthetic.main.activity_browse_screen.*
-import kotlinx.android.synthetic.main.activity_browse_screen.btn_play
-import kotlinx.android.synthetic.main.activity_browse_screen.forward_btn
-import kotlinx.android.synthetic.main.activity_browse_screen.repeat_btn
-import kotlinx.android.synthetic.main.activity_browse_screen.rewind_btn
-import kotlinx.android.synthetic.main.activity_browse_screen.seekbar_music
-import kotlinx.android.synthetic.main.activity_browse_screen.shuffle_btn
-import kotlinx.android.synthetic.main.activity_play_screen.*
 
 
 class MainScreen : AppCompatActivity() {
@@ -33,12 +32,13 @@ class MainScreen : AppCompatActivity() {
     private var position : Int = 0
     private var repeat : Boolean = false
     private var random : Boolean = false
+    private var mViewModel: UserViewModel? = null
+    private var action=false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_browse_screen)
-
-
+        mViewModel = ViewModelProviders.of(this).get(UserViewModel::class.java)
         setupToolBar()
 
         btn_play.setImageResource(R.drawable.pause_btn)
@@ -104,11 +104,12 @@ class MainScreen : AppCompatActivity() {
             }
 
         })
+        sliding_layout.panelState= SlidingUpPanelLayout.PanelState.HIDDEN
     }
 
     private fun setupToolBar(){
         setSupportActionBar(main_toolbar)
-        var actionBar = supportActionBar
+        val actionBar = supportActionBar
         actionBar?.setDisplayHomeAsUpEnabled(true)
         actionBar?.setHomeAsUpIndicator(R.drawable.nav_ic)
     }
@@ -174,10 +175,55 @@ class MainScreen : AppCompatActivity() {
     }
 
     fun play(position: Int, listMusic : MutableList<Music>){
+        setPlayerView(listMusic, position)
+        sliding_layout.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
         this.listMusic = listMusic
         this.position = position
-        sliding_layout.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
-        initMediaPlayer(position!!)
+        initMediaPlayer(position)
+    }
+
+    private fun setPlayerView(
+        listMusic: MutableList<Music>,
+        position: Int
+    ) {
+        mViewModel?.isLike("HkWQty0QRTh9eEaBdCngJQuU1uf2", listMusic[position])
+            ?.observe(this, Observer<Boolean> { data ->
+                run {
+                    action = if (data) {
+                        favorite_btn.setImageResource(R.drawable.favorited_song_btn)
+                        false
+                    } else {
+                        favorite_btn.setImageResource(R.drawable.favorite_song_btn)
+                        true
+                    }
+                }
+            })
+        favorite_btn.setOnClickListener {
+            action = if (action) {
+                favorite_btn.setImageResource(R.drawable.favorited_song_btn)
+                false
+            } else {
+                favorite_btn.setImageResource(R.drawable.favorite_song_btn)
+                true
+            }
+            mViewModel?.likeMusic("HkWQty0QRTh9eEaBdCngJQuU1uf2", listMusic[position], action)
+
+        }
+        Glide
+            .with(this)
+            .load(listMusic[position].posterURL)
+            .thumbnail(0.001f)
+            .into(song_img)
+        Glide
+            .with(this)
+            .load(listMusic[position].posterURL)
+            .thumbnail(0.001f)
+            .apply(RequestOptions.bitmapTransform(BlurTransformation(18, 3)))
+            .into(cards_brands)
+        song_name.text = listMusic[position].name
+        song_artist.text = listMusic[position].artist
+        music_artist_name.text = listMusic[position].name
+        music_play_name.text = listMusic[position].artist
     }
 
     private fun updateTime(){
@@ -241,6 +287,7 @@ class MainScreen : AppCompatActivity() {
                 position = listMusic!!.size - 1
             }
             initMediaPlayer(position)
+            setPlayerView(listMusic!!, position)
         }
     }
 
@@ -264,6 +311,7 @@ class MainScreen : AppCompatActivity() {
                 position = 0
             }
             initMediaPlayer(position)
+            setPlayerView(listMusic!!, position)
         }
     }
 
