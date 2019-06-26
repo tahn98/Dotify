@@ -30,6 +30,7 @@ class DetailCollectionFragment : Fragment() {
     private var listMusic: MutableList<Music> = arrayListOf()
     private lateinit var musicAdapter: MusicAdapter
     private var mViewModel: UserViewModel? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -53,7 +54,7 @@ class DetailCollectionFragment : Fragment() {
             .load(collection.photoURL)
             .fitCenter()
             .apply(RequestOptions.bitmapTransform(BlurTransformation(15, 3)))
-            .thumbnail(0.1f)
+//            .thumbnail(0.1f)
             .into(binding.albumBackgroundImd)
 
         Glide

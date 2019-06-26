@@ -62,15 +62,6 @@ class ArtistFragment : Fragment() {
         gotoArtistScreen(musicCollection, "ARTIST")
     }
 
-
-//    fun gotoAlbumScreen(artist: MusicCollection){
-//        var artistIntent  = Intent(context, AlbumScreen::class.java)
-//        artistIntent.putExtra(BaseConst.passMusicCollection, artist)
-//        artistIntent.putExtra("Type", "ALBUM")
-//
-//        startActivity(artistIntent)
-//    }
-
     private fun gotoArtistScreen(artist: MusicCollection, type: String) {
 
         val destFragment = DetailCollectionFragment()

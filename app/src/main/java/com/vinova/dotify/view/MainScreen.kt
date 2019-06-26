@@ -1,11 +1,14 @@
 package com.vinova.dotify.view
 
+import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.view.animation.Animation
+import android.view.animation.Animation.AnimationListener
+import android.view.animation.AnimationUtils
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -13,16 +16,26 @@ import androidx.core.view.GravityCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import com.vinova.dotify.R
+import com.vinova.dotify.adapter.ListMusicViewPager
 import com.vinova.dotify.model.Music
 import com.vinova.dotify.viewmodel.UserViewModel
-import jp.wasabeef.glide.transformations.BlurTransformation
 import kotlinx.android.synthetic.main.activity_browse_screen.*
-import android.view.animation.Animation
-import android.view.animation.Animation.AnimationListener
-import android.view.animation.AnimationUtils
+import kotlinx.android.synthetic.main.activity_browse_screen.btn_play
+import kotlinx.android.synthetic.main.activity_browse_screen.cards_brands
+import kotlinx.android.synthetic.main.activity_browse_screen.container
+import kotlinx.android.synthetic.main.activity_browse_screen.favorite_btn
+import kotlinx.android.synthetic.main.activity_browse_screen.forward_btn
+import kotlinx.android.synthetic.main.activity_browse_screen.music_artist_name
+import kotlinx.android.synthetic.main.activity_browse_screen.music_play_name
+import kotlinx.android.synthetic.main.activity_browse_screen.repeat_btn
+import kotlinx.android.synthetic.main.activity_browse_screen.rewind_btn
+import kotlinx.android.synthetic.main.activity_browse_screen.seekbar_music
+import kotlinx.android.synthetic.main.activity_browse_screen.shuffle_btn
+import kotlinx.android.synthetic.main.demo.*
+import java.io.IOException
+import java.text.SimpleDateFormat
 
 
 class MainScreen : AppCompatActivity() {
@@ -32,19 +45,31 @@ class MainScreen : AppCompatActivity() {
     }
 
     private var listMusic: MutableCollection<Music> = ArrayList()
-    private var next: Boolean = true
+    private lateinit var viewPager : ListMusicViewPager
+    private var next: Boolean = false
     private var position: Int = 0
     private var repeat: Boolean = false
     private var random: Boolean = false
     private var mViewModel: UserViewModel? = null
     private var action = false
-    private var panelState=false
+    private var panelState= false
+    private lateinit var listCurrentFragment : ListCurrentFragment
+    private lateinit var diskFragment: DiskFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_browse_screen)
         mViewModel = ViewModelProviders.of(this).get(UserViewModel::class.java)
         setupToolBar()
+
+        diskFragment = DiskFragment()
+        listCurrentFragment = ListCurrentFragment()
+
+
+        viewPager = ListMusicViewPager(supportFragmentManager)
+        viewPager.addFragment(diskFragment)
+        viewPager.addFragment(listCurrentFragment)
+        cards_brands.adapter = viewPager
 
         btn_play.setImageResource(R.drawable.pause_btn)
         song_play.setImageResource(R.drawable.pause_btn)
@@ -63,11 +88,11 @@ class MainScreen : AppCompatActivity() {
         }
 
         song_forward.setOnClickListener {
-
+            forwardListener()
         }
 
         song_rewind.setOnClickListener {
-
+            rewindListener()
         }
 
         repeat_btn.setOnClickListener {
@@ -208,17 +233,31 @@ class MainScreen : AppCompatActivity() {
             mediaPlayer?.reset()
         }
 
+        mediaPlayer?.setAudioStreamType(AudioManager.STREAM_MUSIC)
 
         btn_play.setImageResource(R.drawable.pause_btn)
 
-        mediaPlayer?.setDataSource(listMusic.elementAt(position).musicURL)
-        mediaPlayer?.prepare()
+        try{
+            mediaPlayer?.setDataSource(listMusic.elementAt(position).musicURL)
+            mediaPlayer?.prepareAsync()
+        }
+        catch (e : IOException){
+            e.printStackTrace()
+        }
 
+        mediaPlayer?.setOnPreparedListener {
+            it ->
+            seekbar_music.max = mediaPlayer?.duration!!
+            var simpleDateFormat = SimpleDateFormat("mm:ss")
+            max_time.text = simpleDateFormat.format(mediaPlayer?.duration)
+            updateTime()
+            it.start()
+        }
 
-        seekbar_music.max = mediaPlayer?.duration!!
-        updateTime()
+//        seekbar_music.max = mediaPlayer?.duration!!
+//        updateTime()
 
-        mediaPlayer?.start()
+//        mediaPlayer?.start()
 
         seekbar_music.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
@@ -237,15 +276,26 @@ class MainScreen : AppCompatActivity() {
     }
 
     fun play(position: Int, listMusic: MutableList<Music>) {
+        song_play.setImageResource(R.drawable.pause_btn)
+        diskFragment.setDiskImage(listMusic[position])
+        listCurrentFragment.add(listMusic)
+        cards_brands.adapter?.notifyDataSetChanged()
+
         setPlayerView(listMusic, position)
         sliding_layout.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
         this.listMusic = listMusic
         this.position = position
+        this.listCurrentFragment.add(listMusic)
         initMediaPlayer(position)
     }
 
     fun play(song: Music) {
+        song_play.setImageResource(R.drawable.pause_btn)
         this.listMusic.add(song)
+        listCurrentFragment.add(song)
+        diskFragment.setDiskImage(song)
+        cards_brands.adapter?.notifyDataSetChanged()
+
         this.position = listMusic.size - 1
         setPlayerView(listMusic, position)
         sliding_layout.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
@@ -284,12 +334,7 @@ class MainScreen : AppCompatActivity() {
             .load(listMusic.elementAt(position).posterURL)
             .thumbnail(0.001f)
             .into(song_img)
-        Glide
-            .with(this)
-            .load(listMusic.elementAt(position).posterURL)
-            .thumbnail(0.001f)
-            .apply(RequestOptions.bitmapTransform(BlurTransformation(18, 3)))
-            .into(cards_brands)
+
         song_name.text = listMusic.elementAt(position).name
         song_artist.text = listMusic.elementAt(position).artist
         music_artist_name.text = listMusic.elementAt(position).name
@@ -302,14 +347,16 @@ class MainScreen : AppCompatActivity() {
             override fun run() {
                 if (mediaPlayer != null) {
                     seekbar_music.progress = mediaPlayer!!.currentPosition
-                    handler.postDelayed(this, 400)
+                    var simpleDateFormat = SimpleDateFormat("mm:ss")
+                    time_run.text = simpleDateFormat.format(mediaPlayer?.currentPosition)
+                    handler.postDelayed(this, 700)
                     mediaPlayer?.setOnCompletionListener {
                         next = true
                         Thread.sleep(200)
                     }
                 }
             }
-        }, 400)
+        }, 700)
 
         val handlerNext = Handler()
         handlerNext.postDelayed(object : Runnable {
@@ -319,7 +366,7 @@ class MainScreen : AppCompatActivity() {
                     next = false
                     handlerNext.removeCallbacks(this)
                 } else {
-                    handler.postDelayed(this, 1000)
+                    handlerNext.postDelayed(this, 1000)
                 }
             }
 
@@ -331,7 +378,6 @@ class MainScreen : AppCompatActivity() {
             btn_play.setImageResource(R.drawable.pause_btn)
             song_play.setImageResource(R.drawable.pause_btn)
             mediaPlayer?.start()
-
         } else {
             btn_play.setImageResource(R.drawable.play_btn)
             song_play.setImageResource(R.drawable.play_btn)

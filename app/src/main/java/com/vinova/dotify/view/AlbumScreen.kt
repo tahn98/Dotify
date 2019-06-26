@@ -8,14 +8,12 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions.bitmapTransform
 import com.vinova.dotify.R
 import com.vinova.dotify.adapter.MusicAdapter
 import com.vinova.dotify.model.Music
 import com.vinova.dotify.model.MusicCollection
 import com.vinova.dotify.utils.BaseConst
 import com.vinova.dotify.viewmodel.UserViewModel
-import jp.wasabeef.glide.transformations.BlurTransformation
 import kotlinx.android.synthetic.main.activity_album_screen.*
 import java.io.Serializable
 
