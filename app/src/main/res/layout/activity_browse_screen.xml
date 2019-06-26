@@ -106,7 +106,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
-            android:padding="5dp"
             android:background="#ffffff">
 
             <com.vinova.dotify.view.custom_view.RoundRectCornerImageView
@@ -127,7 +126,9 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="5dp"
                 android:fontFamily="@font/avenirnext"
+                android:textColor="#000000"
                 android:text="Hello"
+                android:textSize="17sp"
                 app:layout_constraintLeft_toRightOf="@+id/song_img"
                 app:layout_constraintTop_toTopOf="@id/song_img" />
 
@@ -137,6 +138,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:fontFamily="@font/avenirnext"
+                android:textSize="12sp"
                 android:text="Adele"
                 app:layout_constraintBottom_toBottomOf="@id/song_img"
                 app:layout_constraintLeft_toRightOf="@+id/song_img"
@@ -182,7 +184,7 @@
             android:layout_height="match_parent"
             android:clickable="true"
             android:visibility="invisible"
-            android:paddingTop="30dp">
+            android:paddingTop="20dp">
 
             <ImageView
                 android:id="@+id/cards_brands"

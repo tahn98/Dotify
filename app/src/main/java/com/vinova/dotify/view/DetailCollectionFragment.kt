@@ -106,9 +106,6 @@ class DetailCollectionFragment : Fragment() {
         binding.listMusicContainer.adapter = musicAdapter
         musicAdapter.notifyDataSetChanged()
         binding.imgAlbumBack.setOnClickListener {
-            if (!(activity as MainScreen).checkSlidingUpPanel()) {
-                (activity as MainScreen).showToolbar()
-            }
             (activity as MainScreen).onBackPressed()
         }
         setupToolBar()

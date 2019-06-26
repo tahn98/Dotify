@@ -120,9 +120,15 @@ class BrowseFragment : Fragment() {
     }
 
     private fun moveToViewMore(type: String) {
-        var viewMoreIntent = Intent(context, ViewMore::class.java)
-        viewMoreIntent.putExtra("Type", type)
-        startActivity(viewMoreIntent)
+        val destFragment = ViewMoreFragment()
+        val bundle = Bundle()
+        bundle.putString("Type", type)
+        destFragment.arguments = bundle
+        fragmentManager!!.beginTransaction()
+            .addToBackStack("xyz")
+            .hide(this@BrowseFragment)
+            .add(R.id.feature_container, destFragment)
+            .commit()
     }
 
     private fun moveToDetail(collection: MusicCollection, type: String) {
