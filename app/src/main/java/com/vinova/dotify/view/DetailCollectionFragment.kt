@@ -2,7 +2,6 @@ package com.vinova.dotify.view
 
 
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,15 +16,12 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.vinova.dotify.R
 import com.vinova.dotify.adapter.MusicAdapter
-import com.vinova.dotify.databinding.BrowseScreenBinding
 import com.vinova.dotify.databinding.FragmentDetailCollectionBinding
 import com.vinova.dotify.model.Music
 import com.vinova.dotify.model.MusicCollection
 import com.vinova.dotify.utils.BaseConst
 import com.vinova.dotify.viewmodel.UserViewModel
 import jp.wasabeef.glide.transformations.BlurTransformation
-import kotlinx.android.synthetic.main.activity_album_screen.*
-import java.io.Serializable
 
 
 class DetailCollectionFragment : Fragment() {
@@ -55,9 +51,11 @@ class DetailCollectionFragment : Fragment() {
         Glide
             .with(this)
             .load(collection.photoURL)
-            .thumbnail(0.001f)
-            .apply(RequestOptions.bitmapTransform(BlurTransformation(18, 3)))
+            .fitCenter()
+            .apply(RequestOptions.bitmapTransform(BlurTransformation(15, 3)))
+            .thumbnail(0.1f)
             .into(binding.albumBackgroundImd)
+
         Glide
             .with(this)
             .load(collection.photoURL)
@@ -71,20 +69,20 @@ class DetailCollectionFragment : Fragment() {
             ?.observe(this, Observer<Boolean> { data ->
                 run {
                     action = if (data) {
-                        binding.likeButton.setImageResource(R.drawable.hearted_song_btn)
+                        binding.likeButton.setImageResource(R.drawable.ic_heart_song_btn_selected)
                         false
                     } else {
-                        binding.likeButton.setImageResource(R.drawable.heart_song_btn)
+                        binding.likeButton.setImageResource(R.drawable.ic_heart_song_btn)
                         true
                     }
                 }
             })
         binding.likeButton.setOnClickListener {
             action = if (action) {
-                binding.likeButton.setImageResource(R.drawable.hearted_song_btn)
+                binding.likeButton.setImageResource(R.drawable.ic_heart_song_btn_selected)
                 false
             } else {
-                binding.likeButton.setImageResource(R.drawable.heart_song_btn)
+                binding.likeButton.setImageResource(R.drawable.ic_heart_song_btn)
                 true
             }
             mViewModel?.likeCollection("HkWQty0QRTh9eEaBdCngJQuU1uf2", collection, type!!, action)

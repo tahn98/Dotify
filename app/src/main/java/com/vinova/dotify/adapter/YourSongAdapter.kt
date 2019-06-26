@@ -41,7 +41,7 @@ class YourSongAdapter(private val context: Context,
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(itemView.album_img)
 
-            itemView.setOnClickListener { clickListener(Music()) }
+            itemView.setOnClickListener { clickListener(music) }
         }
     }
 

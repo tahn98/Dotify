@@ -86,7 +86,7 @@
                 android:layout_marginLeft="60dp"
                 android:layout_marginTop="245dp"
                 android:scaleType="fitXY"
-                android:src="@drawable/heart_song_btn"
+                android:src="@drawable/ic_heart_song_btn"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toLeftOf="@id/play_button"
                 app:layout_constraintTop_toTopOf="@id/album_background_imd" />

@@ -1,5 +1,6 @@
 package com.vinova.dotify.view
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -54,6 +55,6 @@ class SongsFragment : Fragment(){
     }
 
     private fun itemClicked(music: Music) {
-        Log.d("nothing", "nothing")
+        (activity as MainScreen).play(music)
     }
 }

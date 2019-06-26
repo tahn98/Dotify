@@ -28,7 +28,7 @@ class MainScreen : AppCompatActivity() {
         var mediaPlayer: MediaPlayer? = null
     }
 
-    private var listMusic: MutableCollection<Music> = ArrayList<Music>()
+    private var listMusic: MutableCollection<Music> = ArrayList()
     private var next: Boolean = true
     private var position: Int = 0
     private var repeat: Boolean = false
@@ -170,6 +170,8 @@ class MainScreen : AppCompatActivity() {
         }
 
 
+        btn_play.setImageResource(R.drawable.pause_btn)
+
         mediaPlayer?.setDataSource(listMusic.elementAt(position).musicURL)
         mediaPlayer?.prepare()
 
@@ -219,7 +221,7 @@ class MainScreen : AppCompatActivity() {
             ?.observe(this, Observer<Boolean> { data ->
                 run {
                     action = if (data) {
-                        favorite_btn.setImageResource(R.drawable.favorited_song_btn)
+                        favorite_btn.setImageResource(R.drawable.ic_favorite_song_btn_selected)
                         false
                     } else {
                         favorite_btn.setImageResource(R.drawable.favorite_song_btn)
@@ -229,7 +231,7 @@ class MainScreen : AppCompatActivity() {
             })
         favorite_btn.setOnClickListener {
             action = if (action) {
-                favorite_btn.setImageResource(R.drawable.favorited_song_btn)
+                favorite_btn.setImageResource(R.drawable.ic_favorite_song_btn_selected)
                 false
             } else {
                 favorite_btn.setImageResource(R.drawable.favorite_song_btn)

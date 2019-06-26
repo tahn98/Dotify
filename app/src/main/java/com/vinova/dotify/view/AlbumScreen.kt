@@ -51,18 +51,20 @@ class AlbumScreen : AppCompatActivity() {
     }
 
     private fun initView(){
-        Glide
-            .with(this)
-            .load(album.photoURL)
-            .thumbnail(0.001f)
-            .apply(bitmapTransform(BlurTransformation(18, 3)))
-            .into(album_background_imd)
+//        Glide
+//            .with(this)
+//            .load(album.photoURL)
+//            .thumbnail(0.001f)
+//            .apply(bitmapTransform(BlurTransformation(18, 3)))
+//            .into(album_background_imd)
+
         Glide
             .with(this)
             .load(album.photoURL)
             .centerCrop()
             .into(photo_album_img)
         var collectionType = intent.extras?.getString("Type")
+
         type.text=collectionType
         album_name.text = album.name
         var action=false
@@ -70,20 +72,20 @@ class AlbumScreen : AppCompatActivity() {
         mViewModel?.isLike("HkWQty0QRTh9eEaBdCngJQuU1uf2",album,collectionType!!)?.observe(this, Observer<Boolean> {data->
             run {
                 action = if(data) {
-                    like_button.setImageResource(R.drawable.hearted_song_btn)
+                    like_button.setImageResource(R.drawable.ic_heart_song_btn_selected)
                     false
                 } else {
-                    like_button.setImageResource(R.drawable.heart_song_btn)
+                    like_button.setImageResource(R.drawable.ic_heart_song_btn)
                     true
                 }
             }
         })
         like_button.setOnClickListener{
             action = if(action) {
-                like_button.setImageResource(R.drawable.hearted_song_btn)
+                like_button.setImageResource(R.drawable.ic_heart_song_btn_selected)
                 false
             } else {
-                like_button.setImageResource(R.drawable.heart_song_btn)
+                like_button.setImageResource(R.drawable.ic_heart_song_btn)
                 true
             }
             mViewModel?.likeCollection("HkWQty0QRTh9eEaBdCngJQuU1uf2",album,collectionType!!,action)

@@ -59,15 +59,29 @@ class ArtistFragment : Fragment() {
     }
 
     private fun itemClicked(musicCollection: MusicCollection) {
-        gotoAlbumScreen(musicCollection)
+        gotoArtistScreen(musicCollection, "ARTIST")
     }
 
 
-    fun gotoAlbumScreen(artist: MusicCollection){
-        var artistIntent  = Intent(context, AlbumScreen::class.java)
-        artistIntent.putExtra(BaseConst.passMusicCollection, artist)
-        artistIntent.putExtra("Type", "ALBUM")
+//    fun gotoAlbumScreen(artist: MusicCollection){
+//        var artistIntent  = Intent(context, AlbumScreen::class.java)
+//        artistIntent.putExtra(BaseConst.passMusicCollection, artist)
+//        artistIntent.putExtra("Type", "ALBUM")
+//
+//        startActivity(artistIntent)
+//    }
 
-        startActivity(artistIntent)
+    private fun gotoArtistScreen(artist: MusicCollection, type: String) {
+
+        val destFragment = DetailCollectionFragment()
+        val bundle = Bundle()
+        bundle.putSerializable(BaseConst.passMusicCollection, artist)
+        bundle.putString("Type", type)
+        destFragment.arguments = bundle
+        fragmentManager!!.beginTransaction()
+            .addToBackStack("xyz")
+            .hide(this@ArtistFragment)
+            .add(R.id.feature_container, destFragment)
+            .commit()
     }
 }
