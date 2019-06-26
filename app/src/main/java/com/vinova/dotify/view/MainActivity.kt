@@ -16,11 +16,13 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, Authentication::class.java)
             intent.putExtra("screen", "login")
             startActivity(intent)
+            finish()
         }
         signup_btn.setOnClickListener {
             val intent = Intent(this, Authentication::class.java)
             intent.putExtra("screen", "singup")
             startActivity(intent)
+            finish()
         }
     }
 }

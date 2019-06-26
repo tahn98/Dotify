@@ -31,6 +31,7 @@ import com.vinova.dotify.databinding.SignUpBinding
 import com.vinova.dotify.viewmodel.UserViewModel
 import java.text.SimpleDateFormat
 import androidx.lifecycle.Observer
+import com.kaopiz.kprogresshud.KProgressHUD
 import com.vinova.dotify.model.User
 import java.util.*
 
@@ -136,13 +137,17 @@ class SignUpFragment : Fragment() {
             LoginManager.getInstance().registerCallback(mCallbackManager, mCallback)
         }
         binding.signup.setOnClickListener {
-            val progressDialog = ProgressDialog(activity)
-            progressDialog.setMessage("Creating account...")
-            progressDialog.show()
+            val loading= KProgressHUD.create(context)
+                .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
+                .setLabel("Creating account ...")
+                .setCancellable(false)
+                .setAnimationSpeed(1)
+                .setDimAmount(5f)
+            loading.show()
             mViewModel?.createUser(email.get()!!,password.get()!!)?.observe(this, Observer<String>{data->run {
                 if(data != "-")
                 {
-                    var user = User()
+                    val user = User()
                     user.uid = data
                     user.email = email.get()!!
                     user.username = username.get()!!
@@ -150,8 +155,9 @@ class SignUpFragment : Fragment() {
                     user.gender = gender.get()!!
                     user.birthdate = birthdate.get()!!
                     mViewModel!!.postUser(user)
-                    var browseIntent = Intent(activity, MainScreen::class.java)
+                    val browseIntent = Intent(activity, MainScreen::class.java)
                     browseIntent.putExtra("curUser",user)
+                    browseIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                     startActivity(browseIntent)
                     this@SignUpFragment.activity?.finish()
                 }
@@ -163,7 +169,7 @@ class SignUpFragment : Fragment() {
                         .setPositiveButton(android.R.string.ok, null)
                         .show()
                 }
-                progressDialog.dismiss()
+                loading.dismiss()
             }})
         }
         binding.emailField.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
@@ -193,6 +199,13 @@ class SignUpFragment : Fragment() {
 
     private fun handleFacebookAccessToken(token: AccessToken) {
         val credential = FacebookAuthProvider.getCredential(token.token)
+        val loading= KProgressHUD.create(context)
+            .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
+            .setLabel("Logging in ...")
+            .setCancellable(false)
+            .setAnimationSpeed(1)
+            .setDimAmount(5f)
+        loading.show()
         mAuth?.signInWithCredential(credential)
             ?.addOnCompleteListener(
                 activity!!
@@ -209,7 +222,7 @@ class SignUpFragment : Fragment() {
                                     .setPositiveButton(android.R.string.ok, null)
                                     .show()
                             } else {
-                                var user = User()
+                                val user = User()
                                 user.uid = res.user.uid
                                 user.email = res.user.email!!
                                 user.username = res.user.displayName!!
@@ -217,16 +230,19 @@ class SignUpFragment : Fragment() {
                                 user.gender = "Male"
                                 user.birthdate = "01/01/2000"
                                 mViewModel!!.postUser(user)
-                                var browseIntent = Intent(activity, MainScreen::class.java)
+                                val browseIntent = Intent(activity, MainScreen::class.java)
                                 browseIntent.putExtra("curUser",user)
+                                browseIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                                 startActivity(browseIntent)
                                 this@SignUpFragment.activity?.finish()
                             }
                         }
+                        loading.dismiss()
                     })
 
 
                 } else {
+                    loading.dismiss()
                     AlertDialog.Builder(activity)
                         .setTitle("Thông báo")
                         .setMessage("Đã xảy ra lỗi trong quá trình liên kết với tài khoản Facebook.")
@@ -258,7 +274,7 @@ class SignUpFragment : Fragment() {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
 
-    fun isPasswordValid(password: String): Boolean {
+    private fun isPasswordValid(password: String): Boolean {
         val regex = """(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}""".toRegex()
         return regex.matches(password)
     }

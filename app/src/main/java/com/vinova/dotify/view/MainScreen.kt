@@ -1,5 +1,6 @@
 package com.vinova.dotify.view
 
+import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
@@ -23,6 +24,7 @@ import kotlinx.android.synthetic.main.activity_browse_screen.*
 import android.view.animation.Animation
 import android.view.animation.Animation.AnimationListener
 import android.view.animation.AnimationUtils
+import com.google.firebase.auth.FirebaseAuth
 
 
 class MainScreen : AppCompatActivity() {
@@ -163,6 +165,13 @@ class MainScreen : AppCompatActivity() {
 
         })
         sliding_layout.panelState = SlidingUpPanelLayout.PanelState.HIDDEN
+        button_logout.setOnClickListener{
+            FirebaseAuth.getInstance().signOut()
+            val intent = Intent(this, MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intent)
+            finish()
+        }
     }
 
     private fun setupToolBar() {
