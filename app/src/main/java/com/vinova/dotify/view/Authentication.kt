@@ -1,5 +1,6 @@
 package com.vinova.dotify.view
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.vinova.dotify.R
@@ -23,5 +24,11 @@ class Authentication : AppCompatActivity() {
             ft.replace(R.id.fragment_holder, SignUpFragment())
             ft.commit()
         }
+    }
+
+    override fun onBackPressed() {
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 }

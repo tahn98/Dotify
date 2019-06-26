@@ -1,5 +1,6 @@
 package com.vinova.dotify.view
 
+import android.content.Intent
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Bundle
@@ -16,27 +17,15 @@ import androidx.core.view.GravityCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
+import com.google.firebase.auth.FirebaseAuth
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import com.vinova.dotify.R
 import com.vinova.dotify.adapter.ListMusicViewPager
 import com.vinova.dotify.model.Music
 import com.vinova.dotify.viewmodel.UserViewModel
 import kotlinx.android.synthetic.main.activity_browse_screen.*
-import kotlinx.android.synthetic.main.activity_browse_screen.btn_play
-import kotlinx.android.synthetic.main.activity_browse_screen.cards_brands
-import kotlinx.android.synthetic.main.activity_browse_screen.container
-import kotlinx.android.synthetic.main.activity_browse_screen.favorite_btn
-import kotlinx.android.synthetic.main.activity_browse_screen.forward_btn
-import kotlinx.android.synthetic.main.activity_browse_screen.music_artist_name
-import kotlinx.android.synthetic.main.activity_browse_screen.music_play_name
-import kotlinx.android.synthetic.main.activity_browse_screen.repeat_btn
-import kotlinx.android.synthetic.main.activity_browse_screen.rewind_btn
-import kotlinx.android.synthetic.main.activity_browse_screen.seekbar_music
-import kotlinx.android.synthetic.main.activity_browse_screen.shuffle_btn
-import kotlinx.android.synthetic.main.demo.*
 import java.io.IOException
 import java.text.SimpleDateFormat
-
 
 class MainScreen : AppCompatActivity() {
 
@@ -188,6 +177,13 @@ class MainScreen : AppCompatActivity() {
 
         })
         sliding_layout.panelState = SlidingUpPanelLayout.PanelState.HIDDEN
+        button_logout.setOnClickListener{
+            FirebaseAuth.getInstance().signOut()
+            val intent = Intent(this, MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intent)
+            finish()
+        }
     }
 
     private fun setupToolBar() {

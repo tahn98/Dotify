@@ -99,6 +99,8 @@ class LogInFragment : Fragment() {
                                 if (user.uid != "-1") {
                                     var browseIntent = Intent(activity, MainScreen::class.java)
                                     browseIntent.putExtra("curUser", user)
+                                    browseIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                                    browseIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                                     startActivity(browseIntent)
                                     this@LogInFragment.activity?.finish()
                                 } else {
@@ -158,6 +160,8 @@ class LogInFragment : Fragment() {
                             if (user.uid != "-1") {
                                 val browseIntent = Intent(activity, MainScreen::class.java)
                                 browseIntent.putExtra("curUser", user)
+                                browseIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                                browseIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                                 startActivity(browseIntent)
                                 this@LogInFragment.activity?.finish()
                             } else {
