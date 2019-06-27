@@ -37,11 +37,11 @@ class YourSongAdapter(private val context: Context,
             Glide.with(context?.applicationContext ?: return)
                 .load(music.photoURL)
                 .thumbnail(0.5f)
-                .error(R.drawable.ic_launcher_background)
+                .error(R.drawable.icon_music_placeholder)
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(itemView.album_img)
 
-            itemView.setOnClickListener { clickListener(Music()) }
+            itemView.setOnClickListener { clickListener(music) }
         }
     }
 

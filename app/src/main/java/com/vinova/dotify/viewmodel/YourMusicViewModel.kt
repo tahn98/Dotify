@@ -20,4 +20,8 @@ class YourMusicViewModel : ViewModel(){
     fun getListArtist(uid: String): MutableLiveData<MutableList<MusicCollection>>?{
         return yourMusicModel?.getYourArtist(uid)
     }
+
+    fun getListPlaylist(uid: String): MutableLiveData<MutableList<MusicCollection>>?{
+        return yourMusicModel?.getYourPlaylist(uid)
+    }
 }

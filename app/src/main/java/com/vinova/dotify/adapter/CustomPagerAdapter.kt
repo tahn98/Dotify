@@ -8,7 +8,6 @@ import androidx.viewpager.widget.PagerAdapter
 import com.bumptech.glide.Glide
 import com.vinova.dotify.databinding.ItemLatestCollectionBinding
 import com.vinova.dotify.model.Music
-import com.vinova.dotify.utils.OnClickListener
 import com.vinova.dotify.utils.OnViewPagerItemClickListener
 
 class CustomPagerAdapter(val context: Context, private val musics: List<Music> ) : PagerAdapter() {

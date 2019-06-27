@@ -1,48 +1,46 @@
 package com.vinova.dotify.view
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.ProgressDialog
 import android.content.Intent
+import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
 import android.provider.MediaStore
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
-import android.widget.SeekBar
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.GravityCompat
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
-import com.sothree.slidinguppanel.SlidingUpPanelLayout
-import com.vinova.dotify.R
-import com.vinova.dotify.model.Music
-import com.vinova.dotify.viewmodel.UserViewModel
-import jp.wasabeef.glide.transformations.BlurTransformation
-import kotlinx.android.synthetic.main.activity_browse_screen.*
 import android.view.animation.Animation
 import android.view.animation.Animation.AnimationListener
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
+import android.widget.SeekBar
 import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
-import com.google.android.gms.tasks.OnSuccessListener
+import androidx.core.view.GravityCompat
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import com.google.firebase.storage.UploadTask
 import com.kaopiz.kprogresshud.KProgressHUD
+import com.sothree.slidinguppanel.SlidingUpPanelLayout
+import com.vinova.dotify.R
+import com.vinova.dotify.adapter.ListMusicViewPager
+import com.vinova.dotify.model.Music
 import com.vinova.dotify.model.User
 import com.vinova.dotify.utils.BaseConst
+import com.vinova.dotify.viewmodel.UserViewModel
+import kotlinx.android.synthetic.main.activity_browse_screen.*
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -50,14 +48,16 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-open class MainScreen : AppCompatActivity() {
+class MainScreen : AppCompatActivity() {
+
 
     companion object {
         var mediaPlayer: MediaPlayer? = null
     }
 
-    private var listMusic: MutableCollection<Music> = ArrayList<Music>()
-    private var next: Boolean = true
+    private var listMusic: MutableCollection<Music> = ArrayList()
+    private lateinit var viewPager: ListMusicViewPager
+    private var next: Boolean = false
     private var position: Int = 0
     private var repeat: Boolean = false
     private var random: Boolean = false
@@ -68,13 +68,13 @@ open class MainScreen : AppCompatActivity() {
     private var mDatabase: DatabaseReference? = null
     private var mImageUri: String? = null
     var user: User? = null
-
     private val GALLERY_REQUEST = 1
-
     private val CAMERA_REQUEST_CODE = 1
-
     private var mStorage: StorageReference? = null
     private lateinit var avatar: ImageView
+    private lateinit var listCurrentFragment: ListCurrentFragment
+    private lateinit var diskFragment: DiskFragment
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,7 +84,7 @@ open class MainScreen : AppCompatActivity() {
         val extras = intent.extras
         if (extras != null) {
             user = intent.getSerializableExtra("curUser") as User
-            BaseConst.curUId=user?.uid!!
+            BaseConst.curUId = user?.uid!!
         }
         val navigationView = findViewById<NavigationView>(R.id.nav_view)
         val header = navigationView.getHeaderView(0)
@@ -100,6 +100,15 @@ open class MainScreen : AppCompatActivity() {
         }
 
         setupToolBar()
+
+        diskFragment = DiskFragment()
+        listCurrentFragment = ListCurrentFragment()
+
+
+        viewPager = ListMusicViewPager(supportFragmentManager)
+        viewPager.addFragment(diskFragment)
+        viewPager.addFragment(listCurrentFragment)
+        cards_brands.adapter = viewPager
 
         btn_play.setImageResource(R.drawable.pause_btn)
         song_play.setImageResource(R.drawable.pause_btn)
@@ -118,11 +127,11 @@ open class MainScreen : AppCompatActivity() {
         }
 
         song_forward.setOnClickListener {
-
+            forwardListener()
         }
 
         song_rewind.setOnClickListener {
-
+            rewindListener()
         }
 
         repeat_btn.setOnClickListener {
@@ -266,6 +275,7 @@ open class MainScreen : AppCompatActivity() {
     }
 
 
+    @SuppressLint("SimpleDateFormat")
     private fun initMediaPlayer(position: Int) {
         if (mediaPlayer == null) {
             mediaPlayer = MediaPlayer()
@@ -273,16 +283,24 @@ open class MainScreen : AppCompatActivity() {
             mediaPlayer?.reset()
         }
 
+        mediaPlayer?.setAudioStreamType(AudioManager.STREAM_MUSIC)
 
-        mediaPlayer?.setDataSource(listMusic.elementAt(position).musicURL)
-        mediaPlayer?.prepare()
+        btn_play.setImageResource(R.drawable.pause_btn)
 
+        try {
+            mediaPlayer?.setDataSource(listMusic.elementAt(position).musicURL)
+            mediaPlayer?.prepareAsync()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
 
-        seekbar_music.max = mediaPlayer?.duration!!
-        updateTime()
-
-        mediaPlayer?.start()
-
+        mediaPlayer?.setOnPreparedListener { it ->
+            seekbar_music.max = mediaPlayer?.duration!!
+            val simpleDateFormat = SimpleDateFormat("mm:ss")
+            max_time.text = simpleDateFormat.format(mediaPlayer?.duration)
+            updateTime()
+            it.start()
+        }
         seekbar_music.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
 
@@ -300,15 +318,26 @@ open class MainScreen : AppCompatActivity() {
     }
 
     fun play(position: Int, listMusic: MutableList<Music>) {
+        song_play.setImageResource(R.drawable.pause_btn)
+        diskFragment.setDiskImage(listMusic[position])
+        listCurrentFragment.add(listMusic)
+        cards_brands.adapter?.notifyDataSetChanged()
+
         setPlayerView(listMusic, position)
         sliding_layout.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
         this.listMusic = listMusic
         this.position = position
+        this.listCurrentFragment.add(listMusic)
         initMediaPlayer(position)
     }
 
     fun play(song: Music) {
+        song_play.setImageResource(R.drawable.pause_btn)
         this.listMusic.add(song)
+        listCurrentFragment.add(song)
+        diskFragment.setDiskImage(song)
+        cards_brands.adapter?.notifyDataSetChanged()
+
         this.position = listMusic.size - 1
         setPlayerView(listMusic, position)
         sliding_layout.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
@@ -323,7 +352,7 @@ open class MainScreen : AppCompatActivity() {
             ?.observe(this, Observer<Boolean> { data ->
                 run {
                     action = if (data) {
-                        favorite_btn.setImageResource(R.drawable.favorited_song_btn)
+                        favorite_btn.setImageResource(R.drawable.ic_favorite_song_btn_selected)
                         false
                     } else {
                         favorite_btn.setImageResource(R.drawable.favorite_song_btn)
@@ -333,7 +362,7 @@ open class MainScreen : AppCompatActivity() {
             })
         favorite_btn.setOnClickListener {
             action = if (action) {
-                favorite_btn.setImageResource(R.drawable.favorited_song_btn)
+                favorite_btn.setImageResource(R.drawable.ic_favorite_song_btn_selected)
                 false
             } else {
                 favorite_btn.setImageResource(R.drawable.favorite_song_btn)
@@ -347,12 +376,7 @@ open class MainScreen : AppCompatActivity() {
             .load(listMusic.elementAt(position).posterURL)
             .thumbnail(0.001f)
             .into(song_img)
-        Glide
-            .with(this)
-            .load(listMusic.elementAt(position).posterURL)
-            .thumbnail(0.001f)
-            .apply(RequestOptions.bitmapTransform(BlurTransformation(18, 3)))
-            .into(cards_brands)
+
         song_name.text = listMusic.elementAt(position).name
         song_artist.text = listMusic.elementAt(position).artist
         music_artist_name.text = listMusic.elementAt(position).name
@@ -362,17 +386,20 @@ open class MainScreen : AppCompatActivity() {
     private fun updateTime() {
         val handler = Handler()
         handler.postDelayed(object : Runnable {
+            @SuppressLint("SimpleDateFormat")
             override fun run() {
                 if (mediaPlayer != null) {
                     seekbar_music.progress = mediaPlayer!!.currentPosition
-                    handler.postDelayed(this, 400)
+                    val simpleDateFormat = SimpleDateFormat("mm:ss")
+                    time_run.text = simpleDateFormat.format(mediaPlayer?.currentPosition)
+                    handler.postDelayed(this, 700)
                     mediaPlayer?.setOnCompletionListener {
                         next = true
                         Thread.sleep(200)
                     }
                 }
             }
-        }, 400)
+        }, 700)
 
         val handlerNext = Handler()
         handlerNext.postDelayed(object : Runnable {
@@ -382,7 +409,7 @@ open class MainScreen : AppCompatActivity() {
                     next = false
                     handlerNext.removeCallbacks(this)
                 } else {
-                    handler.postDelayed(this, 1000)
+                    handlerNext.postDelayed(this, 1000)
                 }
             }
 
@@ -394,7 +421,6 @@ open class MainScreen : AppCompatActivity() {
             btn_play.setImageResource(R.drawable.pause_btn)
             song_play.setImageResource(R.drawable.pause_btn)
             mediaPlayer?.start()
-
         } else {
             btn_play.setImageResource(R.drawable.play_btn)
             song_play.setImageResource(R.drawable.play_btn)
@@ -504,8 +530,8 @@ open class MainScreen : AppCompatActivity() {
 
         if (requestCode == CAMERA_REQUEST_CODE && resultCode == RESULT_OK) {
             //  mImageUri = data?.extras?.get("uri") as Uri
-            val uri = Uri.fromFile(File(mImageUri))
-            val loading= KProgressHUD.create(this)
+            val uri = Uri.fromFile(File(mImageUri!!))
+            val loading = KProgressHUD.create(this)
                 .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
                 .setLabel("Updating avatar ...")
                 .setCancellable(false)
@@ -518,13 +544,12 @@ open class MainScreen : AppCompatActivity() {
                         mViewModel?.getUser(user?.uid!!)?.observe(this, Observer<User> { data ->
                             run {
                                 if (data != null) {
-                                    Glide.with(this).load(data?.profile_photo).thumbnail(0.0001f).into(avatar)
+                                    Glide.with(this).load(data.profile_photo).thumbnail(0.0001f).into(avatar)
                                 }
                             }
                         })
                         loading.dismiss()
-                    }
-                    else{
+                    } else {
                         loading.dismiss()
                         AlertDialog.Builder(this@MainScreen)
                             .setTitle("Thông báo")
@@ -538,6 +563,7 @@ open class MainScreen : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
     }
 
+    @SuppressLint("SimpleDateFormat")
     @Throws(IOException::class)
     private fun createImageFile(): File {
         // Create an image file name

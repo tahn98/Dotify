@@ -30,6 +30,7 @@ class DetailCollectionFragment : Fragment() {
     private var listMusic: MutableList<Music> = arrayListOf()
     private lateinit var musicAdapter: MusicAdapter
     private var mViewModel: UserViewModel? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -51,9 +52,11 @@ class DetailCollectionFragment : Fragment() {
         Glide
             .with(this)
             .load(collection.photoURL)
-            .thumbnail(0.001f)
-            .apply(RequestOptions.bitmapTransform(BlurTransformation(18, 3)))
+            .fitCenter()
+            .apply(RequestOptions.bitmapTransform(BlurTransformation(15, 3)))
+//            .thumbnail(0.1f)
             .into(binding.albumBackgroundImd)
+
         Glide
             .with(this)
             .load(collection.photoURL)
@@ -67,20 +70,20 @@ class DetailCollectionFragment : Fragment() {
             ?.observe(this, Observer<Boolean> { data ->
                 run {
                     action = if (data) {
-                        binding.likeButton.setImageResource(R.drawable.hearted_song_btn)
+                        binding.likeButton.setImageResource(R.drawable.ic_heart_song_btn_selected)
                         false
                     } else {
-                        binding.likeButton.setImageResource(R.drawable.heart_song_btn)
+                        binding.likeButton.setImageResource(R.drawable.ic_heart_song_btn)
                         true
                     }
                 }
             })
         binding.likeButton.setOnClickListener {
             action = if (action) {
-                binding.likeButton.setImageResource(R.drawable.hearted_song_btn)
+                binding.likeButton.setImageResource(R.drawable.ic_heart_song_btn_selected)
                 false
             } else {
-                binding.likeButton.setImageResource(R.drawable.heart_song_btn)
+                binding.likeButton.setImageResource(R.drawable.ic_heart_song_btn)
                 true
             }
             mViewModel?.likeCollection(BaseConst.curUId, collection, type!!, action)
