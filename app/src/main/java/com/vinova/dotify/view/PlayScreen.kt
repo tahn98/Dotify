@@ -71,7 +71,7 @@ class PlayScreen : AppCompatActivity() {
             0
         }
 
-        initMediaPlayer(position!!)
+        initMediaPlayer(position)
 
         btn_play.setImageResource(R.drawable.pause_btn)
 
@@ -240,7 +240,7 @@ class PlayScreen : AppCompatActivity() {
         music_artist_name.text = listMusic?.get(positon)?.artist!!
 
         Glide.with(applicationContext)
-            .load(listMusic!![positon].photoURL)
+            .load(listMusic!![positon].posterURL)
             .thumbnail(0.001f)
             .apply(bitmapTransform(BlurTransformation(18, 3)))
             .into(cards_brands)

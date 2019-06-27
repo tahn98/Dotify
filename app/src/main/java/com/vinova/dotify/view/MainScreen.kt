@@ -1,16 +1,18 @@
 package com.vinova.dotify.view
 
 import android.annotation.SuppressLint
+import android.annotation.TargetApi
 import android.app.AlertDialog
-import android.app.ProgressDialog
 import android.content.Intent
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
 import android.provider.MediaStore
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.animation.Animation
@@ -20,7 +22,9 @@ import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.core.content.FileProvider
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.Observer
@@ -36,6 +40,7 @@ import com.kaopiz.kprogresshud.KProgressHUD
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import com.vinova.dotify.R
 import com.vinova.dotify.adapter.ListMusicViewPager
+import com.vinova.dotify.adapter.MusicAdapter
 import com.vinova.dotify.model.Music
 import com.vinova.dotify.model.User
 import com.vinova.dotify.utils.BaseConst
@@ -53,8 +58,9 @@ class MainScreen : AppCompatActivity() {
 
     companion object {
         var mediaPlayer: MediaPlayer? = null
+        lateinit var searchResultAdapter: MusicAdapter
     }
-
+    var searchView: SearchView?=null
     private var listMusic: MutableCollection<Music> = ArrayList()
     private lateinit var viewPager: ListMusicViewPager
     private var next: Boolean = false
@@ -64,7 +70,6 @@ class MainScreen : AppCompatActivity() {
     private var mViewModel: UserViewModel? = null
     private var action = false
     private var panelState = false
-    private var mProgress: ProgressDialog? = null
     private var mDatabase: DatabaseReference? = null
     private var mImageUri: String? = null
     var user: User? = null
@@ -94,11 +99,7 @@ class MainScreen : AppCompatActivity() {
         Glide.with(this).load(user?.profile_photo).thumbnail(0.0001f).into(avatar)
         mStorage = FirebaseStorage.getInstance().reference
         mDatabase = FirebaseDatabase.getInstance().reference.child("users").child(user!!.uid)
-        mProgress = ProgressDialog(this)
-        avatar.setOnClickListener {
-            dispatchTakePictureIntent()
-        }
-
+        header.findViewById<TextView>(R.id.change_avatar).setOnClickListener { dispatchTakePictureIntent() }
         setupToolBar()
 
         diskFragment = DiskFragment()
@@ -169,9 +170,6 @@ class MainScreen : AppCompatActivity() {
             }
             true
         }
-
-        goToBrowseFragment()
-
         sliding_layout.addPanelSlideListener(object : SlidingUpPanelLayout.PanelSlideListener {
             override fun onPanelSlide(panel: View?, slideOffset: Float) {
 
@@ -183,48 +181,21 @@ class MainScreen : AppCompatActivity() {
                 newState: SlidingUpPanelLayout.PanelState?
             ) {
                 if (newState == SlidingUpPanelLayout.PanelState.DRAGGING && !panelState) {
-                    val fadeInAnimation = AnimationUtils.loadAnimation(
-                        this@MainScreen, R.anim.fade_in
-                    )
-                    fadeInAnimation.setAnimationListener(object : AnimationListener {
-
-                        override fun onAnimationStart(animation: Animation) {
-                            container.visibility = View.VISIBLE
-                        }
-
-                        override fun onAnimationRepeat(animation: Animation) {
-                        }
-
-                        override fun onAnimationEnd(animation: Animation) {
-                        }
-                    })
-                    container.startAnimation(fadeInAnimation)
-                    bottom_sheet.visibility = View.INVISIBLE
+                    visibleExpandedContainer()
                 }
                 if (newState == SlidingUpPanelLayout.PanelState.DRAGGING && panelState) {
-                    container.visibility = View.INVISIBLE
-                    bottom_sheet.visibility = View.VISIBLE
-                    val fadeInAnimation = AnimationUtils.loadAnimation(
-                        this@MainScreen, R.anim.fade_in
-                    )
-                    fadeInAnimation.setAnimationListener(object : AnimationListener {
-
-                        override fun onAnimationStart(animation: Animation) {
-                            bottom_sheet.visibility = View.VISIBLE
-                        }
-
-                        override fun onAnimationRepeat(animation: Animation) {
-                        }
-
-                        override fun onAnimationEnd(animation: Animation) {
-                        }
-                    })
-                    bottom_sheet.startAnimation(fadeInAnimation)
+                    visibleBottomContainer()
                 }
                 if (newState == SlidingUpPanelLayout.PanelState.EXPANDED) {
+                    if (container.visibility == View.INVISIBLE) {
+                        visibleExpandedContainer()
+                    }
                     panelState = true
                 }
                 if (newState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
+                    if (bottom_sheet.visibility == View.INVISIBLE) {
+                        visibleBottomContainer()
+                    }
                     panelState = false
                 }
             }
@@ -237,6 +208,50 @@ class MainScreen : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+
+
+        goToBrowseFragment()
+    }
+
+    private fun visibleExpandedContainer() {
+        val fadeInAnimation = AnimationUtils.loadAnimation(
+            this@MainScreen, R.anim.fade_in
+        )
+        fadeInAnimation.setAnimationListener(object : AnimationListener {
+
+            override fun onAnimationStart(animation: Animation) {
+                container.visibility = View.VISIBLE
+            }
+
+            override fun onAnimationRepeat(animation: Animation) {
+            }
+
+            override fun onAnimationEnd(animation: Animation) {
+            }
+        })
+        container.startAnimation(fadeInAnimation)
+        bottom_sheet.visibility = View.INVISIBLE
+    }
+
+    private fun visibleBottomContainer() {
+        container.visibility = View.INVISIBLE
+        bottom_sheet.visibility = View.VISIBLE
+        val fadeInAnimation = AnimationUtils.loadAnimation(
+            this@MainScreen, R.anim.fade_in
+        )
+        fadeInAnimation.setAnimationListener(object : AnimationListener {
+
+            override fun onAnimationStart(animation: Animation) {
+                bottom_sheet.visibility = View.VISIBLE
+            }
+
+            override fun onAnimationRepeat(animation: Animation) {
+            }
+
+            override fun onAnimationEnd(animation: Animation) {
+            }
+        })
+        bottom_sheet.startAnimation(fadeInAnimation)
     }
 
     private fun setupToolBar() {
@@ -254,6 +269,27 @@ class MainScreen : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu):Boolean {
+        menuInflater.inflate(R.menu.search_menu, menu)
+
+        // Getting search action from action bar and setting up search view
+        val searchItem = menu.findItem(R.id.search)
+        searchView = searchItem.actionView as SearchView
+        searchView?.setOnQueryTextFocusChangeListener { _ , hasFocus ->
+            if (hasFocus) {
+                supportFragmentManager.beginTransaction().replace(R.id.feature_container, SearchResultFragment()).addToBackStack(null)
+                    .commit()
+            } else {
+                onBackPressed()
+            }
+        }
+        // Setup searchView
+        //setupSearchView(searchItem)
+
+        return true;
     }
 
     private fun goToYourMusicFragment() {
@@ -348,7 +384,7 @@ class MainScreen : AppCompatActivity() {
         listMusic: MutableCollection<Music>,
         position: Int
     ) {
-        mViewModel?.isLike("HkWQty0QRTh9eEaBdCngJQuU1uf2", listMusic.elementAt(position))
+        mViewModel?.isLike(BaseConst.curUId, listMusic.elementAt(position))
             ?.observe(this, Observer<Boolean> { data ->
                 run {
                     action = if (data) {
@@ -521,9 +557,12 @@ class MainScreen : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (supportFragmentManager.backStackEntryCount == 1) this.showToolbar()
         if (checkSlidingUpPanel()) collapseSlidingPanel()
-        else super.onBackPressed()
+        else {
+            if (supportFragmentManager.backStackEntryCount == 1) this.showToolbar()
+            super.onBackPressed()
+        }
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -602,4 +641,6 @@ class MainScreen : AppCompatActivity() {
             }
         }
     }
+
+
 }

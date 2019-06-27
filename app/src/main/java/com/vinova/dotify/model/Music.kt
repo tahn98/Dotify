@@ -10,7 +10,5 @@ class Music : Serializable {
     var backdropURL:String?=null
     var posterURL:String?=null
     var description:String?=null
-    var photoURL : String? = null
 }
 
-//>>>>>>> a2e4d0ce0ab8261e913bfe88463024181f8a94e8
