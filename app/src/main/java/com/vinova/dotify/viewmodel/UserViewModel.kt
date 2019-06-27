@@ -1,5 +1,6 @@
 package com.vinova.dotify.viewmodel
 
+import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.AuthCredential
@@ -49,5 +50,10 @@ class UserViewModel :ViewModel() {
 
     fun likeMusic(UID:String,music:Music,action:Boolean){
         userModel.likeMusic(UID,music,action)
+    }
+
+    fun updateAvatar(UID:String,uri: Uri?):MutableLiveData<Boolean>
+    {
+        return userModel.updateAvatar(UID,uri)
     }
 }

@@ -1,9 +1,13 @@
 package com.vinova.dotify.repository
 
+import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import com.vinova.dotify.model.Music
 import com.vinova.dotify.model.MusicCollection
 import com.vinova.dotify.model.User
@@ -79,7 +83,8 @@ class UserRepository {
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    res.value = dataSnapshot.getValue(User::class.java)
+                    res.value = dataSnapshot.child(UID).getValue(User::class.java)
+                    println(res.value.toString())
                 } else {
                     res.value?.uid = "-1"
                 }
@@ -157,6 +162,28 @@ class UserRepository {
 
             }
         })
+        return res
+    }
+
+    fun updateAvatar(UID: String, uri: Uri?): MutableLiveData<Boolean> {
+        val res = MutableLiveData<Boolean>()
+        val mStorage: StorageReference = FirebaseStorage.getInstance().reference
+        val mDatabase: DatabaseReference = FirebaseDatabase.getInstance().reference.child("users").child(UID)
+        if (uri != null) {
+
+            val filepath = mStorage.child("avatar").child(uri.lastPathSegment!!)
+            filepath.putFile(uri).addOnSuccessListener {
+                filepath.downloadUrl.addOnSuccessListener {
+                    mDatabase.child("profile_photo").setValue(it.toString())
+                    res.value = true
+                }
+            }
+                .addOnFailureListener {
+                    res.value = false
+                }
+
+        }
+
         return res
     }
 }

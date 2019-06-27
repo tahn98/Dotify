@@ -4,7 +4,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">#e8e8e8</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">#EB3F09</item>
         <item name="android:windowLightStatusBar">true</item>
     </style>
 </resources>

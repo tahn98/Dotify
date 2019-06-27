@@ -37,7 +37,7 @@ class DiskFragment : Fragment(){
     fun setDiskImage(music : Music){
         Glide
             .with(context!!)
-            .load(music.photoURL)
+            .load(music.posterURL)
             .centerCrop()
             .thumbnail(0.5f)
             .error(R.drawable.disk_place_holder)

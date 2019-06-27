@@ -42,8 +42,8 @@ class YourSongAdapter(private val context: Context,
             itemView.album_name.text = music.name
             itemView.album_artist.text = music.artist
 
-            Glide.with(context?.applicationContext ?: return)
-                .load(music.photoURL)
+            Glide.with(context.applicationContext ?: return)
+                .load(music.posterURL)
                 .thumbnail(0.5f)
                 .error(R.drawable.icon_music_placeholder)
                 .transition(DrawableTransitionOptions.withCrossFade())

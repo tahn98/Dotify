@@ -66,7 +66,7 @@ class DetailCollectionFragment : Fragment() {
         binding.albumName.text = collection.name
         var action = false
 
-        mViewModel?.isLike("HkWQty0QRTh9eEaBdCngJQuU1uf2", collection, type!!)
+        mViewModel?.isLike(BaseConst.curUId, collection, type!!)
             ?.observe(this, Observer<Boolean> { data ->
                 run {
                     action = if (data) {
@@ -86,7 +86,7 @@ class DetailCollectionFragment : Fragment() {
                 binding.likeButton.setImageResource(R.drawable.ic_heart_song_btn)
                 true
             }
-            mViewModel?.likeCollection("HkWQty0QRTh9eEaBdCngJQuU1uf2", collection, type!!, action)
+            mViewModel?.likeCollection(BaseConst.curUId, collection, type!!, action)
 
         }
         binding.shareButton.setOnClickListener {
