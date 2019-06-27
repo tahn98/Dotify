@@ -119,6 +119,16 @@
         app:layout_constraintTop_toBottomOf="@+id/cards_brands" />
 
     <ImageView
+        android:id="@+id/custom_btn"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="60dp"
+        android:src="@drawable/ic_share"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cards_brands" />
+
+    <ImageView
         android:id="@+id/type_speaker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

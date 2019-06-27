@@ -17,11 +17,11 @@ import kotlinx.android.synthetic.main.list_album_custom_widget.view.album_artist
 import kotlinx.android.synthetic.main.list_album_custom_widget.view.album_img
 import kotlinx.android.synthetic.main.list_album_custom_widget.view.album_name
 
-class YourSongAdapter(private val context: Context,
+class ListCurrentAdapter(private val context: Context,
                       private val listMusic : MutableList<Music>,
                       private val clickListener : (Music) -> Unit) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val inflater = LayoutInflater.from(parent.context).inflate(R.layout.list_song_custom_widget, parent, false)
+        val inflater = LayoutInflater.from(parent.context).inflate(R.layout.list_current_widget, parent, false)
 
         return SongViewHolder(inflater)
     }
@@ -50,16 +50,6 @@ class YourSongAdapter(private val context: Context,
                 .into(itemView.album_img)
 
             itemView.setOnClickListener { clickListener(music) }
-
-//            itemView.icMore.setOnClickListener {
-//                var bottomsheet : BottomSheetDialogFragment = BottomSheet()
-//                bottomsheet.show((context as MainScreen).supportFragmentManager, bottomsheet.tag)
-//            }
-
-            icMore.setOnClickListener {
-                var bottomsheet : BottomSheetDialogFragment = BottomSheet(music, this@YourSongAdapter, listMusic)
-                bottomsheet.show((context as MainScreen).supportFragmentManager, bottomsheet.tag)
-            }
         }
     }
 }

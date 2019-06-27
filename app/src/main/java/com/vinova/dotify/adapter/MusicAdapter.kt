@@ -7,8 +7,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.vinova.dotify.R
 import com.vinova.dotify.model.Music
+import com.vinova.dotify.view.BottomSheetAdd
+import com.vinova.dotify.view.MainScreen
 import kotlinx.android.synthetic.main.list_album_music_widget.view.*
 
 class MusicAdapter(private val context: Context,
@@ -36,6 +39,11 @@ class MusicAdapter(private val context: Context,
             itemView.music_number.text = pos
 
             itemView.setOnClickListener { clickListener(music, pos.toInt()) }
+
+            itemView.ic_more_add.setOnClickListener {
+                var bottomsheet : BottomSheetDialogFragment = BottomSheetAdd(music, this@MusicAdapter, listMusic)
+                bottomsheet.show((context as MainScreen).supportFragmentManager, bottomsheet.tag)
+            }
         }
     }
 }

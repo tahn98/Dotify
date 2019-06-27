@@ -25,7 +25,7 @@
 
         <ImageView
             android:padding="10dp"
-            android:id="@+id/ic_more_add"
+            android:id="@+id/ic_more"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_marginRight="10dp"
@@ -34,37 +34,32 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:fontFamily="@font/avenirnext"
-            android:gravity="center"
-            android:textAlignment="center"
-            android:textSize="18sp"
-            android:text="1"
-            android:id="@+id/music_number"
+        <ImageView
+            android:id="@+id/album_img"
             android:src="@drawable/albumimg"
-            android:layout_marginLeft="12dp"
+            android:layout_marginLeft="8dp"
             app:layout_constraintLeft_toLeftOf="parent"
             android:layout_marginTop="12dp"
             app:layout_constraintTop_toBottomOf="@id/top_line"
-            android:layout_width="40dp"
-            android:layout_height="40dp" />
+            android:layout_width="70dp"
+            android:layout_height="50dp" />
 
         <TextView
             android:textColor="#5E5E5E"
-            android:id="@+id/music_name"
+            android:id="@+id/album_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="17dp"
             android:fontFamily="@font/avenirnext"
             android:text="What do you mean "
             android:textSize="16sp"
-            app:layout_constraintLeft_toRightOf="@id/music_number"
+            app:layout_constraintLeft_toRightOf="@id/album_img"
             app:layout_constraintTop_toTopOf="@id/top_line" />
 
         <TextView
             android:textColor="#5E5E5E"
-            android:id="@+id/music_artist"
+            android:id="@+id/album_artist"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
@@ -72,8 +67,8 @@
             android:fontFamily="@font/avenirnext"
             android:text="Justin"
             android:textSize="12sp"
-            app:layout_constraintLeft_toRightOf="@id/music_number"
-            app:layout_constraintTop_toBottomOf="@id/music_name" />
+            app:layout_constraintLeft_toRightOf="@id/album_img"
+            app:layout_constraintTop_toBottomOf="@id/album_name" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
 

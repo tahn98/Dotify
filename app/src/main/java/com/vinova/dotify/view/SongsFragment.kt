@@ -1,6 +1,5 @@
 package com.vinova.dotify.view
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -30,14 +29,19 @@ class SongsFragment : Fragment(){
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
+
         mYourMusicViewViewModel = ViewModelProviders.of(this).get(YourMusicViewModel::class.java)
         mYourMusicViewViewModel.getListMusic("HkWQty0QRTh9eEaBdCngJQuU1uf2")
             ?.observe(this, Observer <MutableList<Music>>{
                 run{
                     if(it != null){
+                        listMusic.clear()
                         listMusic.addAll(it)
                         songAdapter.notifyDataSetChanged()
                         Log.d("it", it.toString())
+                        if(listMusic.isEmpty()){
+                            nothing_text_song.text = "You don't have any music collection"
+                        }
                     }
                 }
             })
@@ -51,6 +55,7 @@ class SongsFragment : Fragment(){
         songs_recycleView.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         songAdapter = YourSongAdapter( context!! ,listMusic) { music : Music -> itemClicked(music)}
         songs_recycleView.adapter = songAdapter
+
         songAdapter.notifyDataSetChanged()
     }
 

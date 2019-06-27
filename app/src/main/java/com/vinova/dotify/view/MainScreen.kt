@@ -76,6 +76,10 @@ class MainScreen : AppCompatActivity() {
             }
         }
 
+        btn_dismiss.setOnClickListener {
+            onBackPressed()
+        }
+
         song_forward.setOnClickListener {
             forwardListener()
         }
@@ -289,6 +293,19 @@ class MainScreen : AppCompatActivity() {
         song_play.setImageResource(R.drawable.pause_btn)
         this.listMusic.add(song)
         listCurrentFragment.add(song)
+        diskFragment.setDiskImage(song)
+        cards_brands.adapter?.notifyDataSetChanged()
+
+        this.position = listMusic.size - 1
+        setPlayerView(listMusic, position)
+        sliding_layout.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
+        initMediaPlayer(position)
+    }
+
+
+    fun play(song: Music, current : Boolean) {
+        song_play.setImageResource(R.drawable.pause_btn)
+        this.listMusic.add(song)
         diskFragment.setDiskImage(song)
         cards_brands.adapter?.notifyDataSetChanged()
 

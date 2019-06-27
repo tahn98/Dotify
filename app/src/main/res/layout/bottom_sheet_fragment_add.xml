@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="300dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
+    <TextView
+        android:paddingLeft="20dp"
+        android:gravity="center"
+        android:drawableLeft="@drawable/ic_playlist_add_black_24dp"
+        android:id="@+id/bts_add"
+        android:textAlignment="center"
+        android:textSize="15sp"
+        android:fontFamily="@font/avenir"
+        android:text="Add To Your Song"
+        android:layout_width="match_parent"
+        android:layout_height="60dp" />
+
+    <View
+        android:layout_marginTop="5dp"
+        android:id="@+id/top_line"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="#D7D7D7" />
+
+    <TextView
+        android:paddingLeft="20dp"
+        android:gravity="center"
+        android:drawableLeft="@drawable/ic_share"
+        android:layout_marginTop="5dp"
+        android:id="@+id/bts_share"
+        android:textAlignment="center"
+        android:textSize="15sp"
+        android:fontFamily="@font/avenir"
+        android:text="Share"
+        android:layout_width="match_parent"
+        android:layout_height="60dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
+</LinearLayout>

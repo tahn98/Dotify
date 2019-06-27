@@ -2,16 +2,13 @@ package com.vinova.dotify.view
 
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.vinova.dotify.R
 import com.vinova.dotify.model.Music
 import de.hdodenhof.circleimageview.CircleImageView
@@ -32,6 +29,7 @@ class DiskFragment : Fragment(){
         objectAnimator.repeatCount = ValueAnimator.INFINITE
         objectAnimator.repeatMode = ValueAnimator.RESTART
         objectAnimator.interpolator = LinearInterpolator()
+        objectAnimator.start()
 
         return mView
     }

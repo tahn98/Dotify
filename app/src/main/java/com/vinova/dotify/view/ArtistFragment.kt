@@ -36,14 +36,17 @@ class ArtistFragment : Fragment() {
         mYourMusicViewViewModel.getListArtist("HkWQty0QRTh9eEaBdCngJQuU1uf2")
             ?.observe(this, Observer<MutableList<MusicCollection>?> {
                 run {
-                    nothing_text.visibility = View.INVISIBLE
                     if (it != null) {
                         Log.d("abc", it.toString())
                         listArtist.clear()
                         listArtist.addAll(it)
                         artistAdapter.notifyDataSetChanged()
+                        if(listArtist.isEmpty()){
+                            nothing_text.text = "You don't have any music collection"
+                        }
                     }
                 }
+
             })
 
         return inflater.inflate(R.layout.artist_fragment, container, false)
