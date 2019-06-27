@@ -3,6 +3,11 @@
     package="com.vinova.dotify">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-feature android:name="android.hardware.camera"
+        android:required="true" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -14,7 +19,7 @@
         <activity android:name=".view.ViewMore"></activity>
         <activity android:name=".view.PlayScreen" />
         <activity android:name=".view.AlbumScreen" />
-        <activity android:name=".view.MainScreen">
+        <activity android:name=".view.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -22,7 +27,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".view.Authentication" />
-        <activity android:name=".view.MainActivity" />
+        <activity android:name=".view.MainScreen" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -44,6 +49,15 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.example.android.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"></meta-data>
+        </provider>
     </application>
 
 </manifest>

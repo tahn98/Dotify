@@ -97,12 +97,7 @@ class LogInFragment : Fragment() {
                         mViewModel?.getUser(data)?.observe(this, Observer<User> { user ->
                             run {
                                 if (user.uid != "-1") {
-                                    var browseIntent = Intent(activity, MainScreen::class.java)
-                                    browseIntent.putExtra("curUser", user)
-                                    browseIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                                    browseIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                                    startActivity(browseIntent)
-                                    this@LogInFragment.activity?.finish()
+                                    (activity as Authentication).moveToMainScreen(user)
                                 } else {
                                     createErrorDialog()
                                 }
@@ -157,13 +152,8 @@ class LogInFragment : Fragment() {
                 if (data != "-1") {
                     mViewModel?.getUser(data)?.observe(this, Observer<User> { user ->
                         run {
-                            if (user.uid != "-1") {
-                                val browseIntent = Intent(activity, MainScreen::class.java)
-                                browseIntent.putExtra("curUser", user)
-                                browseIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                                browseIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                                startActivity(browseIntent)
-                                this@LogInFragment.activity?.finish()
+                            if (user.uid != "-1" && user.uid!="") {
+                                (activity as Authentication).moveToMainScreen(user)
                             } else {
                                 createErrorDialog()
                             }

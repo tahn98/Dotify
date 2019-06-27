@@ -6,5 +6,6 @@ class BaseConst{
         val passmusicobject = "MUSICOBJECT"
         val passlistmusicobject = "passlistmusicobject"
         val passartist = "passartist"
+        var curUId=""
     }
 }

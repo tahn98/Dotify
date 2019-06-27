@@ -155,11 +155,7 @@ class SignUpFragment : Fragment() {
                     user.gender = gender.get()!!
                     user.birthdate = birthdate.get()!!
                     mViewModel!!.postUser(user)
-                    val browseIntent = Intent(activity, MainScreen::class.java)
-                    browseIntent.putExtra("curUser",user)
-                    browseIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                    startActivity(browseIntent)
-                    this@SignUpFragment.activity?.finish()
+                    (activity as Authentication).moveToMainScreen(user)
                 }
                 else
                 {
@@ -230,11 +226,7 @@ class SignUpFragment : Fragment() {
                                 user.gender = "Male"
                                 user.birthdate = "01/01/2000"
                                 mViewModel!!.postUser(user)
-                                val browseIntent = Intent(activity, MainScreen::class.java)
-                                browseIntent.putExtra("curUser",user)
-                                browseIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                                startActivity(browseIntent)
-                                this@SignUpFragment.activity?.finish()
+                                (activity as Authentication).moveToMainScreen(user)
                             }
                         }
                         loading.dismiss()

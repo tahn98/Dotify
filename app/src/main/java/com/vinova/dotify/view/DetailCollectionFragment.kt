@@ -2,7 +2,6 @@ package com.vinova.dotify.view
 
 
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,15 +16,12 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.vinova.dotify.R
 import com.vinova.dotify.adapter.MusicAdapter
-import com.vinova.dotify.databinding.BrowseScreenBinding
 import com.vinova.dotify.databinding.FragmentDetailCollectionBinding
 import com.vinova.dotify.model.Music
 import com.vinova.dotify.model.MusicCollection
 import com.vinova.dotify.utils.BaseConst
 import com.vinova.dotify.viewmodel.UserViewModel
 import jp.wasabeef.glide.transformations.BlurTransformation
-import kotlinx.android.synthetic.main.activity_album_screen.*
-import java.io.Serializable
 
 
 class DetailCollectionFragment : Fragment() {
@@ -67,7 +63,7 @@ class DetailCollectionFragment : Fragment() {
         binding.albumName.text = collection.name
         var action = false
 
-        mViewModel?.isLike("HkWQty0QRTh9eEaBdCngJQuU1uf2", collection, type!!)
+        mViewModel?.isLike(BaseConst.curUId, collection, type!!)
             ?.observe(this, Observer<Boolean> { data ->
                 run {
                     action = if (data) {
@@ -87,7 +83,7 @@ class DetailCollectionFragment : Fragment() {
                 binding.likeButton.setImageResource(R.drawable.heart_song_btn)
                 true
             }
-            mViewModel?.likeCollection("HkWQty0QRTh9eEaBdCngJQuU1uf2", collection, type!!, action)
+            mViewModel?.likeCollection(BaseConst.curUId, collection, type!!, action)
 
         }
         binding.shareButton.setOnClickListener {
