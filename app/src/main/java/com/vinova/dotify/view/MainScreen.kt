@@ -58,7 +58,6 @@ class MainScreen : AppCompatActivity() {
 
     companion object {
         var mediaPlayer: MediaPlayer? = null
-        lateinit var searchResultAdapter: MusicAdapter
     }
     var searchView: SearchView?=null
     private var listMusic: MutableCollection<Music> = ArrayList()
@@ -73,7 +72,6 @@ class MainScreen : AppCompatActivity() {
     private var mDatabase: DatabaseReference? = null
     private var mImageUri: String? = null
     var user: User? = null
-    private val GALLERY_REQUEST = 1
     private val CAMERA_REQUEST_CODE = 1
     private var mStorage: StorageReference? = null
     private lateinit var avatar: ImageView
@@ -658,6 +656,4 @@ class MainScreen : AppCompatActivity() {
             }
         }
     }
-
-
 }

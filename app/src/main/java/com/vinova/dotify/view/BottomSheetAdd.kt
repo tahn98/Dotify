@@ -11,6 +11,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.vinova.dotify.R
 import com.vinova.dotify.adapter.MusicAdapter
 import com.vinova.dotify.model.Music
+import com.vinova.dotify.utils.BaseConst
 import com.vinova.dotify.viewmodel.UserViewModel
 import kotlinx.android.synthetic.main.bottom_sheet_fragment.*
 
@@ -28,7 +29,7 @@ class BottomSheetAdd(var music : Music, var adapter: MusicAdapter, var list : Mu
 
         bts_add.setOnClickListener {
             Toast.makeText(context, "Add ${music.name}", Toast.LENGTH_SHORT).show()
-            mViewModel?.likeMusic("HkWQty0QRTh9eEaBdCngJQuU1uf2", music, false)
+            mViewModel?.likeMusic(BaseConst.curUId, music, false)
             this.dismiss()
         }
 
