@@ -33,7 +33,7 @@ class ArtistFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         mYourMusicViewViewModel = ViewModelProviders.of(this).get(YourMusicViewModel::class.java)
-        mYourMusicViewViewModel.getListArtist("HkWQty0QRTh9eEaBdCngJQuU1uf2")
+        mYourMusicViewViewModel.getListArtist(BaseConst.curUId)
             ?.observe(this, Observer<MutableList<MusicCollection>?> {
                 run {
                     nothing_text.visibility = View.INVISIBLE

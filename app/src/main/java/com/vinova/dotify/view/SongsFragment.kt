@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.vinova.dotify.R
 import com.vinova.dotify.adapter.YourSongAdapter
 import com.vinova.dotify.model.Music
+import com.vinova.dotify.utils.BaseConst
 import com.vinova.dotify.viewmodel.YourMusicViewModel
 import kotlinx.android.synthetic.main.songs_fragment.*
 
@@ -31,7 +32,7 @@ class SongsFragment : Fragment(){
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         mYourMusicViewViewModel = ViewModelProviders.of(this).get(YourMusicViewModel::class.java)
-        mYourMusicViewViewModel.getListMusic("HkWQty0QRTh9eEaBdCngJQuU1uf2")
+        mYourMusicViewViewModel.getListMusic(BaseConst.curUId)
             ?.observe(this, Observer <MutableList<Music>>{
                 run{
                     if(it != null){
