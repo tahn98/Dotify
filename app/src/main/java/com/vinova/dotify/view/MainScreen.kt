@@ -1,15 +1,14 @@
 package com.vinova.dotify.view
 
 import android.annotation.SuppressLint
-import android.annotation.TargetApi
 import android.app.AlertDialog
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
+import android.content.IntentFilter
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
@@ -24,7 +23,6 @@ import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.FileProvider
@@ -32,6 +30,9 @@ import androidx.core.view.GravityCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
@@ -44,10 +45,10 @@ import com.kaopiz.kprogresshud.KProgressHUD
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import com.vinova.dotify.R
 import com.vinova.dotify.adapter.ListMusicViewPager
-import com.vinova.dotify.adapter.MusicAdapter
 import com.vinova.dotify.model.Music
 import com.vinova.dotify.model.User
 import com.vinova.dotify.utils.BaseConst
+import com.vinova.dotify.utils.HeadsetPlugReceiver
 import com.vinova.dotify.viewmodel.UserViewModel
 import kotlinx.android.synthetic.main.activity_browse_screen.*
 import java.io.File
@@ -76,6 +77,10 @@ class MainScreen : AppCompatActivity() {
     private var mDatabase: DatabaseReference? = null
     private var mImageUri: String? = null
     var user: User? = null
+
+    private var headsetPlugReceiver :HeadsetPlugReceiver?=  null
+    private var updateUIReceiver: BroadcastReceiver? = null
+
     private val CAMERA_REQUEST_CODE = 1
     private var mStorage: StorageReference? = null
     private lateinit var avatar: ImageView
@@ -222,7 +227,11 @@ class MainScreen : AppCompatActivity() {
             finish()
         }
 
-
+        headsetPlugReceiver= HeadsetPlugReceiver()
+        var intentFilter = IntentFilter()
+        intentFilter.addAction("android.intent.action.HEADSET_PLUG")
+        registerReceiver(headsetPlugReceiver, intentFilter)
+        registerReceiver(updateUIReceiver, IntentFilter("broadCastName"))
         goToBrowseFragment()
     }
 
@@ -328,10 +337,8 @@ class MainScreen : AppCompatActivity() {
                 onBackPressed()
             }
         }
-        // Setup searchView
-        //setupSearchView(searchItem)
 
-        return true;
+        return true
     }
 
     private fun goToYourMusicFragment() {
@@ -412,7 +419,7 @@ class MainScreen : AppCompatActivity() {
     fun play(song: Music, current: Boolean = false) {
         song_play.setImageResource(R.drawable.pause_btn)
         this.listMusic.add(song)
-        if (!current){
+        if (!current) {
             listCurrentFragment.add(song)
         }
         diskFragment.setDiskImage(song)
@@ -422,7 +429,6 @@ class MainScreen : AppCompatActivity() {
         setPlayerView(listMusic, position)
         sliding_layout.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
         initMediaPlayer(position)
-
     }
 
     private fun setPlayerView(
@@ -689,6 +695,10 @@ class MainScreen : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        if (headsetPlugReceiver != null) {
+            unregisterReceiver(headsetPlugReceiver)
+            headsetPlugReceiver = null
+        }
         if(mediaPlayer!=null)
         {
             val sharedPreferences = getSharedPreferences("sharedRef", Context.MODE_PRIVATE)
@@ -703,4 +713,42 @@ class MainScreen : AppCompatActivity() {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        this.unregisterReceiver(this.updateUIReceiver)
+    }
+    override fun onResume() {
+        super.onResume()
+        val intentFilter = IntentFilter(
+            "android.intent.action.MAIN"
+        )
+        updateUIReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                //extract our message from intent
+                var state = intent.getStringExtra("state")
+                if(state=="true")
+                {
+                    val factory = DrawableCrossFadeFactory.Builder().setCrossFadeEnabled(true).build()
+
+                    Glide.with(context)
+                        .load(R.drawable.headphone)
+                        .transition(DrawableTransitionOptions.withCrossFade(factory))
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(type_speaker)
+                }
+                else{
+                    val factory = DrawableCrossFadeFactory.Builder().setCrossFadeEnabled(true).build()
+
+                    Glide.with(context)
+                        .load(R.drawable.internal_speaker)
+                        .transition(DrawableTransitionOptions.withCrossFade(factory))
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(type_speaker)
+                }
+
+            }
+        }
+        //registering our receiver
+        this.registerReceiver(updateUIReceiver, intentFilter)
+    }
 }
