@@ -30,14 +30,17 @@ class PlayListFragment : Fragment(){
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mYourMusicViewViewModel = ViewModelProviders.of(this).get(YourMusicViewModel::class.java)
-        mYourMusicViewViewModel.getListPlaylist("HkWQty0QRTh9eEaBdCngJQuU1uf2")
+        mYourMusicViewViewModel.getListPlaylist(BaseConst.curUId)
             ?.observe(this, Observer<MutableList<MusicCollection>?> {
                 run {
-                    nothing_text.visibility = View.INVISIBLE
                     if (it != null) {
                         listPlaylist.clear()
                         listPlaylist.addAll(it)
                         playlistAdapter.notifyDataSetChanged()
+
+                        if (listPlaylist.isEmpty()){
+                            nothing_text.text = "You don't have any music collection"
+                        }
                     }
                 }
             })

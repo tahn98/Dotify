@@ -32,7 +32,7 @@ class AlbumFragment : Fragment(){
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         mYourMusicViewViewModel = ViewModelProviders.of(this).get(YourMusicViewModel::class.java)
-        mYourMusicViewViewModel.getAlbums("HkWQty0QRTh9eEaBdCngJQuU1uf2")
+        mYourMusicViewViewModel.getAlbums(BaseConst.curUId)
             ?.observe(this, Observer <MutableList<MusicCollection>?>{
                 run{
                     if(it != null){

@@ -3,7 +3,9 @@ package com.vinova.dotify.view
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
@@ -36,6 +38,8 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.kaopiz.kprogresshud.KProgressHUD
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import com.vinova.dotify.R
@@ -203,7 +207,14 @@ class MainScreen : AppCompatActivity() {
             }
 
         })
-        sliding_layout.panelState = SlidingUpPanelLayout.PanelState.HIDDEN
+
+        if(mediaPlayer==null){
+            sliding_layout.panelState = SlidingUpPanelLayout.PanelState.HIDDEN
+        }
+        else
+        {
+            restoreStatus()
+        }
         button_logout.setOnClickListener {
             FirebaseAuth.getInstance().signOut()
             val intent = Intent(this, MainActivity::class.java)
@@ -213,6 +224,35 @@ class MainScreen : AppCompatActivity() {
 
 
         goToBrowseFragment()
+    }
+
+    private fun restoreStatus() {
+        if(mediaPlayer!=null)
+        {
+            updateTime()
+            seekbar_music.max= mediaPlayer!!.duration
+            val simpleDateFormat = SimpleDateFormat("mm:ss")
+            max_time.text = simpleDateFormat.format(mediaPlayer?.duration)
+            val sharedPreferences = getSharedPreferences("sharedRef", Context.MODE_PRIVATE)
+            val gson = Gson()
+            position=sharedPreferences.getInt("curPosition",0)
+            val turnsType = object : TypeToken<MutableCollection<Music>>() {}.type
+            val prevList=sharedPreferences.getString("curList","")
+            listMusic=gson.fromJson(prevList,turnsType)
+            setPlayerView(listMusic,position)
+            val isPlaying=sharedPreferences.getBoolean("isPlaying",false)
+            if(isPlaying)
+            {
+                song_play.setImageResource(R.drawable.pause_btn)
+                btn_play.setImageResource(R.drawable.pause_btn)
+            }
+            else
+            {
+                song_play.setImageResource(R.drawable.play_btn)
+                btn_play.setImageResource(R.drawable.play_btn)
+            }
+        }
+
     }
 
     private fun visibleExpandedContainer() {
@@ -369,10 +409,12 @@ class MainScreen : AppCompatActivity() {
         initMediaPlayer(position)
     }
 
-    fun play(song: Music) {
+    fun play(song: Music, current: Boolean = false) {
         song_play.setImageResource(R.drawable.pause_btn)
         this.listMusic.add(song)
-        listCurrentFragment.add(song)
+        if (!current){
+            listCurrentFragment.add(song)
+        }
         diskFragment.setDiskImage(song)
         cards_brands.adapter?.notifyDataSetChanged()
 
@@ -380,19 +422,7 @@ class MainScreen : AppCompatActivity() {
         setPlayerView(listMusic, position)
         sliding_layout.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
         initMediaPlayer(position)
-    }
 
-
-    fun play(song: Music, current : Boolean) {
-        song_play.setImageResource(R.drawable.pause_btn)
-        this.listMusic.add(song)
-        diskFragment.setDiskImage(song)
-        cards_brands.adapter?.notifyDataSetChanged()
-
-        this.position = listMusic.size - 1
-        setPlayerView(listMusic, position)
-        sliding_layout.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
-        initMediaPlayer(position)
     }
 
     private fun setPlayerView(
@@ -656,4 +686,21 @@ class MainScreen : AppCompatActivity() {
             }
         }
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if(mediaPlayer!=null)
+        {
+            val sharedPreferences = getSharedPreferences("sharedRef", Context.MODE_PRIVATE)
+            val editor= sharedPreferences.edit()
+            val gson = Gson()
+            editor.putInt("curPosition",position)
+            val curList=gson.toJson(listMusic)
+            editor.putString("curList",curList)
+            editor.putBoolean("isPlaying", mediaPlayer!!.isPlaying)
+            editor.apply()
+           // editor.commit()
+        }
+    }
+
 }
