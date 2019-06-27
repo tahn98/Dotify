@@ -228,13 +228,14 @@ class MainScreen : AppCompatActivity() {
         }
 
         headsetPlugReceiver= HeadsetPlugReceiver()
-        var intentFilter = IntentFilter()
+        val intentFilter = IntentFilter()
         intentFilter.addAction("android.intent.action.HEADSET_PLUG")
         registerReceiver(headsetPlugReceiver, intentFilter)
         registerReceiver(updateUIReceiver, IntentFilter("broadCastName"))
         goToBrowseFragment()
     }
 
+    @SuppressLint("SimpleDateFormat")
     private fun restoreStatus() {
         if(mediaPlayer!=null)
         {
@@ -725,7 +726,7 @@ class MainScreen : AppCompatActivity() {
         updateUIReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 //extract our message from intent
-                var state = intent.getStringExtra("state")
+                val state = intent.getStringExtra("state")
                 if(state=="true")
                 {
                     val factory = DrawableCrossFadeFactory.Builder().setCrossFadeEnabled(true).build()
