@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.vinova.dotify.R
+import com.vinova.dotify.adapter.ListCurrentAdapter
 import com.vinova.dotify.adapter.YourSongAdapter
 import com.vinova.dotify.model.Music
 import kotlinx.android.synthetic.main.list_current_fragment.*
@@ -16,7 +17,7 @@ import kotlinx.android.synthetic.main.list_current_fragment.view.*
 
 class ListCurrentFragment : Fragment(){
     private val listMusic : MutableList<Music>? = arrayListOf()
-    private var listAdapter : YourSongAdapter? = null
+    private var listAdapter : ListCurrentAdapter? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.list_current_fragment, container, false)
@@ -26,7 +27,7 @@ class ListCurrentFragment : Fragment(){
         super.onActivityCreated(savedInstanceState)
 
         list_current_container.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-        listAdapter = YourSongAdapter( context!! , listMusic!!) {
+        listAdapter = ListCurrentAdapter( context!! , listMusic!!) {
                 music : Music -> itemClicked(music)
         }
         list_current_container.adapter = listAdapter
@@ -46,7 +47,7 @@ class ListCurrentFragment : Fragment(){
 
     private fun itemClicked(music: Music) {
         if (listMusic != null) {
-            (activity as MainScreen).play(music)
+            (activity as MainScreen).play(music, true)
         }
     }
 }

@@ -29,6 +29,7 @@ class DiskFragment : Fragment(){
         objectAnimator.repeatCount = ValueAnimator.INFINITE
         objectAnimator.repeatMode = ValueAnimator.RESTART
         objectAnimator.interpolator = LinearInterpolator()
+        objectAnimator.start()
 
         return mView
     }

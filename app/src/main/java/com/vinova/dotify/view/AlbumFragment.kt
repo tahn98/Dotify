@@ -35,12 +35,14 @@ class AlbumFragment : Fragment(){
         mYourMusicViewViewModel.getAlbums(BaseConst.curUId)
             ?.observe(this, Observer <MutableList<MusicCollection>?>{
                 run{
-                    nothing_text.visibility = View.INVISIBLE
                     if(it != null){
                         Log.d("abc", it.toString())
                         listAlbum.clear()
                         listAlbum.addAll(it)
                         albumAdapter.notifyDataSetChanged()
+                        if(listAlbum.isEmpty()){
+                            nothing_text.text = "You don't have any music collection"
+                        }
                     }
                 }
             })

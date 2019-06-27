@@ -43,14 +43,16 @@
             android:layout_height="50dp" />
 
         <TextView
+            android:layout_marginTop="5dp"
             android:id="@+id/artist_name"
+            android:padding="3dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:fontFamily="@font/avenirnext"
             android:text="What do you mean "
             android:textColor="#5E5E5E"
-            android:textSize="18sp"
+            android:textSize="16sp"
             app:layout_constraintLeft_toRightOf="@id/artist_img"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
