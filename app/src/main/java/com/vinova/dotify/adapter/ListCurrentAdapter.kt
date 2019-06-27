@@ -43,7 +43,7 @@ class ListCurrentAdapter(private val context: Context,
             itemView.album_artist.text = music.artist
 
             Glide.with(context?.applicationContext ?: return)
-                .load(music.photoURL)
+                .load(music.posterURL)
                 .thumbnail(0.5f)
                 .error(R.drawable.icon_music_placeholder)
                 .transition(DrawableTransitionOptions.withCrossFade())
