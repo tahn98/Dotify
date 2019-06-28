@@ -1,22 +1,26 @@
 # PROJECT : DOTIFY (SPOTIFY CLONE)
+A simple Music Player with all the features better than any other music player available for your Android devices.
 
 ## Description
 Music software have similar features spotify.
 - LogIn/LogOut/Register.
-- Brower Screen 
-- Your Music Screen
-- Play Music 
+- Brower Screen in 4 different ways from the app (Lasted Music, Playlist, Albums, Genre & Mood)
+- Full widget support with list of songs. 
+- Your Music Screen, Create playlists as per your mood and add songs to them. 
+- Share songs that you are currently listening on social media apps.
+- App is designed based on the concept of material design to make the experience native for Android users.
 
-## Story, Library
-- Custom recycle view to display a list of music
-- Cusotm Drawer Navigation 
-- Custom Toolbar
-- Using Fragment 
-- Using Bottom Sheet
-- Using Async with Media Player
-- Using Glide to Show Image View
-- Realtime Data with FireBase
-- Using DataBinding
+## Handle some tech
+- Custom recycle view to display a list of music.
+- Custom Drawer Navigation.
+- Custom Toolbar.
+- Using Fragment.
+- Using Bottom Sheet.
+- Using Background thread with Media Player.
+- Using Glide to Show Image View.
+- Using SharePreference to save current state.
+- Realtime Data with FireBase.
+- Using DataBinding.
 
 ## Design Pattern
 MVVM Model
