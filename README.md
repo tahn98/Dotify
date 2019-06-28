@@ -26,9 +26,10 @@ Music software have similar features spotify.
 MVVM Model
 
 ## Screenshot
-![](https://user-images.githubusercontent.com/38346869/60272985-59bb6500-991f-11e9-982f-851505e3a0bd.PNG)
-![](https://user-images.githubusercontent.com/38346869/60272986-59bb6500-991f-11e9-977c-ac1fc5c503de.PNG)
-![](https://user-images.githubusercontent.com/38346869/60272988-5a53fb80-991f-11e9-98eb-eca11a9a2328.PNG)
-![](https://user-images.githubusercontent.com/38346869/60272989-5a53fb80-991f-11e9-8dba-5112b81adaea.PNG)
+![](https://user-images.githubusercontent.com/38346869/60329024-afdce680-99b9-11e9-94d7-3bf3ccc25510.png)
+![](https://user-images.githubusercontent.com/38346869/60329025-afdce680-99b9-11e9-9530-f0ed395402e5.png)
+![](https://user-images.githubusercontent.com/38346869/60329026-afdce680-99b9-11e9-9b80-ca316d1dbe0e.png)
+![](https://user-images.githubusercontent.com/38346869/60329027-b0757d00-99b9-11e9-950f-5aa13f4dad29.png)
+![](https://user-images.githubusercontent.com/38346869/60329030-b0757d00-99b9-11e9-8455-a50b589cad40.png)
 
 Copyright of Tahn and Tim VINOVA_LTE
