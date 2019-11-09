@@ -33,4 +33,4 @@ MVVM Model
 ![](https://user-images.githubusercontent.com/38346869/60329030-b0757d00-99b9-11e9-8455-a50b589cad40.png)
 
 ## License & Copyright
-   Copyright [2019] [Tahn, Timm Vinova_LTE]
+   Copyright [2019] 
